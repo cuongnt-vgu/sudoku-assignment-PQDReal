@@ -2,7 +2,6 @@
 #include "hidden_singles.h"
 #include "sudoku.h"
 
-// Helper function declarations
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden singles logic here

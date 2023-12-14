@@ -1,7 +1,6 @@
 #include "naked_pairs.h"
 #include "sudoku.h"
 
-// Helper function declarations
 static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size);
 
 // Implement naked pairs logic here

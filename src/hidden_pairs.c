@@ -1,7 +1,6 @@
 #include "hidden_pairs.h"
 #include "sudoku.h"
 
-// Helper function declarations
 static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden pairs logic here
