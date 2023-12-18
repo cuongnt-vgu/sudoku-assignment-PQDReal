@@ -1,6 +1,8 @@
 #include "hidden_triples.h"
 #include "sudoku.h"
 
+#include <string.h>
+
 static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden triples logic here
