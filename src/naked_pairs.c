@@ -68,7 +68,7 @@ static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size)
 }
 
 // Function to check if two arrays have the same candidates
-int has_same_candidates(const int *arr1, const int *arr2)
+int has_same_candidates_p(const int *arr1, const int *arr2)
 {
     for (int c = 0; c < BOARD_SIZE; c++)
     {

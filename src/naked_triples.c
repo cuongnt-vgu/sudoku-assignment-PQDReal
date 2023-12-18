@@ -67,7 +67,7 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
 }
 
 // Function to check if three arrays have the same candidates
-int has_same_candidates(const int *arr1, const int *arr2, const int *arr3)
+int has_same_candidates_t(const int *arr1, const int *arr2, const int *arr3)
 {
     for (int c = 0; c < BOARD_SIZE; c++)
     {
