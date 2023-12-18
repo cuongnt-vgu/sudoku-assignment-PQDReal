@@ -43,7 +43,7 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
                 if (p_cells[i]->value == 0 && p_cells[j]->value == 0 && p_cells[k]->value == 0)
                 {
                     // Check if these three cells have the same three possibilities
-                    if (has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates, p_cells[k]->candidates))
+                    if (has_same_candidates_t(p_cells[i]->candidates, p_cells[j]->candidates, p_cells[k]->candidates))
                     {
                         // Naked triple found, remove candidates from other cells in the unit
                         for (int m = 0; m < unit_size; m++)

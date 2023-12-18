@@ -44,7 +44,7 @@ static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size)
                 if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2)
                 {
                     // Check if the candidates in both cells are the same
-                    if (has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
+                    if (has_same_candidates_p(p_cells[i]->candidates, p_cells[j]->candidates))
                     {
                         // Naked pair found, remove candidates from other cells in the unit
                         for (int k = 0; k < unit_size; k++)
