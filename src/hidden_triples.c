@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size);
+static int find_hidden_triples_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden triples logic here
 int hidden_triples(SudokuBoard *p_board)
@@ -13,26 +13,29 @@ int hidden_triples(SudokuBoard *p_board)
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
     {
-        find_hidden_triples_in_unit(p_board->p_rows[i], BOARD_SIZE);
+        hiddenTriplesCounter += find_hidden_triples_in_unit(p_board->p_rows[i], BOARD_SIZE);
     }
 
     // Check columns
     for (int i = 0; i < BOARD_SIZE; i++)
     {
-        find_hidden_triples_in_unit(p_board->p_cols[i], BOARD_SIZE);
+        hiddenTriplesCounter += find_hidden_triples_in_unit(p_board->p_cols[i], BOARD_SIZE);
     }
 
     // Check boxes
     for (int i = 0; i < BOARD_SIZE; i++)
     {
-        find_hidden_triples_in_unit(p_board->p_boxes[i], BOARD_SIZE);
+        hiddenTriplesCounter += find_hidden_triples_in_unit(p_board->p_boxes[i], BOARD_SIZE);
     }
 
     return hiddenTriplesCounter;
 }
 
-static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
+
+static int find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
 {
+    int hiddenTriplesCounter = 0;
+
     // Iterate through each triple of cells
     for (int i = 0; i < unit_size - 2; i++)
     {
@@ -88,9 +91,12 @@ static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
                                 }
                             }
                         }
+                        hiddenTriplesCounter++;
                     }
                 }
             }
         }
     }
+
+    return hiddenTriplesCounter;
 }
