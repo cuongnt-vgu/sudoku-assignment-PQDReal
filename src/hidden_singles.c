@@ -1,9 +1,7 @@
+#include <stddef.h>
 #include "hidden_singles.h"
 #include "sudoku.h"
 
-#include <stddef.h>
-
-// Helper function declarations
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden singles logic here
@@ -42,7 +40,7 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
 
         for (int i = 0; i < unit_size; i++)
         {
-            if (p_cells[i]->value == 0 && is_candidate(p_cells[i], value))
+            if (p_cells[i]->num_candidates > 1 && is_candidate(p_cells[i], value))
             {
                 count++;
                 candidateCell = p_cells[i];
@@ -53,7 +51,8 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
         if (count == 1 && candidateCell != NULL)
         {
             // Apply the constraint to the hidden single
-            apply_constraint(candidateCell, value);
+            apply_constraint(&candidateCell, value);
         }
     }
 }
+
