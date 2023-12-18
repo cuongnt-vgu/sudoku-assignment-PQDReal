@@ -1,8 +1,7 @@
 #include "naked_pairs.h"
 #include "sudoku.h"
 
-#include <string.h>
-
+// Helper function declarations
 static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size);
 
 // Implement naked pairs logic here
@@ -38,22 +37,26 @@ static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size)
     {
         for (int j = i + 1; j < unit_size; j++)
         {
-            // Check if both cells have exactly two candidates
-            if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2)
+            // Check if both cells are empty
+            if (p_cells[i]->value == 0 && p_cells[j]->value == 0)
             {
-                // Check if the candidates in both cells are the same
-                if (memcmp(p_cells[i]->candidates, p_cells[j]->candidates, BOARD_SIZE * sizeof(int)) == 0)
+                // Check if both cells have exactly two candidates
+                if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2)
                 {
-                    // Naked pair found, remove candidates from other cells in the unit
-                    for (int k = 0; k < unit_size; k++)
+                    // Check if the candidates in both cells are the same
+                    if (has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
                     {
-                        if (k != i && k != j)
+                        // Naked pair found, remove candidates from other cells in the unit
+                        for (int k = 0; k < unit_size; k++)
                         {
-                            for (int value = 1; value <= BOARD_SIZE; value++)
+                            if (k != i && k != j)
                             {
-                                if (p_cells[i]->candidates[value - 1])
+                                for (int value = 1; value <= BOARD_SIZE; value++)
                                 {
-                                    apply_constraint(&p_cells[k], value);
+                                    if (p_cells[i]->candidates[value - 1])
+                                    {
+                                        apply_constraint(&p_cells[k], value);
+                                    }
                                 }
                             }
                         }
@@ -62,4 +65,17 @@ static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size)
             }
         }
     }
+}
+
+// Function to check if two arrays have the same candidates
+int has_same_candidates(const int *arr1, const int *arr2)
+{
+    for (int c = 0; c < BOARD_SIZE; c++)
+    {
+        if (arr1[c] != arr2[c])
+        {
+            return 0;
+        }
+    }
+    return 1;
 }

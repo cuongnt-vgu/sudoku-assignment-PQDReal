@@ -65,11 +65,13 @@ static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
 
                     // Check if there are exactly 3 candidates in the combined set
                     int count = 0;
+                    int uniqueCandidates[3] = {0};
+
                     for (int c = 0; c < BOARD_SIZE; c++)
                     {
                         if (combinedCandidates[c])
                         {
-                            count++;
+                            uniqueCandidates[count++] = c + 1;
                         }
                     }
 
@@ -80,12 +82,9 @@ static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
                         {
                             if (m != i && m != j && m != k)
                             {
-                                for (int value = 1; value <= BOARD_SIZE; value++)
+                                for (int c = 0; c < 3; c++)
                                 {
-                                    if (combinedCandidates[value - 1])
-                                    {
-                                        apply_constraint(&p_cells[m], value);
-                                    }
+                                    apply_constraint(&p_cells[m], uniqueCandidates[c]);
                                 }
                             }
                         }

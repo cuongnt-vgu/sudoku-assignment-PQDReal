@@ -1,8 +1,7 @@
 #include "naked_triples.h"
 #include "sudoku.h"
 
-#include <string.h>
-
+// Helper function declarations
 static void find_naked_triples_in_unit(Cell **p_cells, int unit_size);
 
 // Implement naked triples logic here
@@ -40,40 +39,11 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
         {
             for (int k = j + 1; k < unit_size; k++)
             {
-                // Check if all three cells have 2 or 3 candidates
-                if ((p_cells[i]->num_candidates == 2 || p_cells[i]->num_candidates == 3) &&
-                    (p_cells[j]->num_candidates == 2 || p_cells[j]->num_candidates == 3) &&
-                    (p_cells[k]->num_candidates == 2 || p_cells[k]->num_candidates == 3))
+                // Check if all three cells are empty
+                if (p_cells[i]->value == 0 && p_cells[j]->value == 0 && p_cells[k]->value == 0)
                 {
-                    // Combine candidates from the three cells
-                    int combinedCandidates[BOARD_SIZE] = {0};
-
-                    for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                    {
-                        combinedCandidates[p_cells[i]->candidates[c] - 1] = 1;
-                    }
-
-                    for (int c = 0; c < p_cells[j]->num_candidates; c++)
-                    {
-                        combinedCandidates[p_cells[j]->candidates[c] - 1] = 1;
-                    }
-
-                    for (int c = 0; c < p_cells[k]->num_candidates; c++)
-                    {
-                        combinedCandidates[p_cells[k]->candidates[c] - 1] = 1;
-                    }
-
-                    // Check if there are exactly 3 candidates in the combined set
-                    int count = 0;
-                    for (int c = 0; c < BOARD_SIZE; c++)
-                    {
-                        if (combinedCandidates[c])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == 3)
+                    // Check if these three cells have the same three possibilities
+                    if (has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates, p_cells[k]->candidates))
                     {
                         // Naked triple found, remove candidates from other cells in the unit
                         for (int m = 0; m < unit_size; m++)
@@ -82,7 +52,7 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
                             {
                                 for (int value = 1; value <= BOARD_SIZE; value++)
                                 {
-                                    if (combinedCandidates[value - 1])
+                                    if (p_cells[i]->candidates[value - 1])
                                     {
                                         apply_constraint(&p_cells[m], value);
                                     }
@@ -94,4 +64,17 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
             }
         }
     }
+}
+
+// Function to check if three arrays have the same candidates
+int has_same_candidates(const int *arr1, const int *arr2, const int *arr3)
+{
+    for (int c = 0; c < BOARD_SIZE; c++)
+    {
+        if (arr1[c] != arr2[c] || arr1[c] != arr3[c])
+        {
+            return 0;
+        }
+    }
+    return 1;
 }

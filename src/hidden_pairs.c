@@ -1,9 +1,7 @@
 #include "hidden_pairs.h"
 #include "sudoku.h"
 
-#include <string.h>
-
-
+// Helper function declarations
 static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden pairs logic here
@@ -39,20 +37,39 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
     {
         for (int j = i + 1; j < unit_size; j++)
         {
-            // Check if both cells have the same two candidates
-            if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
-                memcmp(p_cells[i]->candidates, p_cells[j]->candidates, BOARD_SIZE * sizeof(int)) == 0)
+            // Check if both cells are empty
+            if (p_cells[i]->value == 0 && p_cells[j]->value == 0)
             {
-                // Hidden pair found, remove other candidates from the unit
-                for (int k = 0; k < unit_size; k++)
+                // Check if both cells have exactly two candidates
+                if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
+                    has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
                 {
-                    if (k != i && k != j)
+                    // Hidden pair found, remove other candidates from the unit
+                    for (int k = 0; k < unit_size; k++)
                     {
-                        apply_constraint(&p_cells[k], p_cells[i]->candidates[0]);
-                        apply_constraint(&p_cells[k], p_cells[i]->candidates[1]);
+                        if (k != i && k != j)
+                        {
+                            for (int c = 0; c < p_cells[i]->num_candidates; c++)
+                            {
+                                apply_constraint(&p_cells[k], p_cells[i]->candidates[c]);
+                            }
+                        }
                     }
                 }
             }
         }
     }
+}
+
+// Function to check if two arrays have the same candidates
+int has_same_candidates(const int *arr1, const int *arr2)
+{
+    for (int c = 0; c < BOARD_SIZE; c++)
+    {
+        if (arr1[c] != arr2[c])
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
