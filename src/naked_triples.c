@@ -1,14 +1,14 @@
 #include "naked_triples.h"
 #include "sudoku.h"
 
+int nakedTriplesCounter = 0;
+
 // Helper function declarations
 static void find_naked_triples_in_unit(Cell **p_cells, int unit_size);
 
 // Implement naked triples logic here
 int naked_triples(SudokuBoard *p_board)
 {
-    int nakedTriplesCounter = 0;
-
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
     {
@@ -59,6 +59,7 @@ static void find_naked_triples_in_unit(Cell **p_cells, int unit_size)
                                 }
                             }
                         }
+                        nakedTriplesCounter++;
                     }
                 }
             }

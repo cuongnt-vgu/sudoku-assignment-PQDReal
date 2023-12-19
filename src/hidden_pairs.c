@@ -1,14 +1,13 @@
 #include "hidden_pairs.h"
 #include "sudoku.h"
 
+int hiddenPairsCounter = 0;
 // Helper function declarations
 static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden pairs logic here
 int hidden_pairs(SudokuBoard *p_board)
 {
-    int hiddenPairsCounter = 0;
-
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
     {
@@ -55,6 +54,7 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
                             }
                         }
                     }
+                    hiddenPairsCounter++;
                 }
             }
         }

@@ -2,12 +2,13 @@
 #include "hidden_singles.h"
 #include "sudoku.h"
 
+int hiddenSinglesCounter = 0;
+
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden singles logic here
 int hidden_singles(SudokuBoard *p_board)
 {
-    int hiddenSinglesCounter = 0;
 
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
@@ -52,6 +53,7 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
         {
             // Apply the constraint to the hidden single
             apply_constraint(p_cells, value);
+            hiddenSinglesCounter++;
         }
     }
 }
