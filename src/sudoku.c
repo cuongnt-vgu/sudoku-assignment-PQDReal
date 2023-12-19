@@ -32,20 +32,31 @@ int main(int argc, char **argv)
             continue;
         }
 
-        // Check for hidden singles
-        hidden_singles(board);
-
-        // Check for hidden pairs
-        hidden_pairs(board);
-
-        // Check for hidden triples
-        hidden_triples(board);
-
-        // Check for naked pairs
-        naked_pairs(board);
-
-        // Check for naked triples
-        naked_triples(board);
+        // Loop over different solving techniques
+        for (int technique = 0; technique < 5; technique++)
+        {
+            switch (technique)
+            {
+            case 0:
+                hidden_singles(board);
+                break;
+            case 1:
+                hidden_pairs(board);
+                break;
+            case 2:
+                hidden_triples(board);
+                break;
+            case 3:
+                naked_pairs(board);
+                break;
+            case 4:
+                naked_triples(board);
+                break;
+            default:
+                fprintf(stderr, "Invalid technique index.\n");
+                return 1;
+            }
+        }
     }
 
     print_solution(board);

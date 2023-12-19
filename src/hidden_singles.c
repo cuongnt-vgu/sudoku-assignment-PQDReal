@@ -52,9 +52,6 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
         {
             // Apply the constraint to the hidden single
             apply_constraint(p_cells, value);
-
-            // Set the candidates for the hidden single
-            set_candidates(candidateCell, &value, 1);
         }
     }
 }
