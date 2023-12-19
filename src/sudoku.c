@@ -1,12 +1,10 @@
 #include "sudoku.h"
-#include "hidden_singles.h"
-#include "hidden_pairs.h"
-#include "hidden_triples.h"
-#include "naked_pairs.h"
-#include "naked_triples.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "hidden_singles.h"
 
 int main(int argc, char **argv)
 {
@@ -22,46 +20,25 @@ int main(int argc, char **argv)
 
     Cell **p_solved_cells = board->solved_cells;
     int solved_counter = board->solved_counter;
-
     while (board->solved_counter < BOARD_SIZE * BOARD_SIZE)
     {
         solved_counter = check_solved_cells(board, &p_solved_cells);
-
+        // printf("check_solved_cells %d\n", solved_counter);
         if (show_possible(board, p_solved_cells, solved_counter))
         {
+            // printf("show_possible -> Yes\n");
             continue;
         }
-
-        // Loop over different solving techniques
-        for (int technique = 0; technique < 5; technique++)
-        {
-            switch (technique)
-            {
-            case 0:
-                hidden_singles(board);
-                break;
-            case 1:
-                hidden_pairs(board);
-                break;
-            case 2:
-                hidden_triples(board);
-                break;
-            case 3:
-                naked_pairs(board);
-                break;
-            case 4:
-                naked_triples(board);
-                break;
-            default:
-                fprintf(stderr, "Invalid technique index.\n");
-                return 1;
-            }
-        }
+        // solved_counter = hidden_singles(board);
+        // if (solved_counter)
+        // {
+        //     printf("hidden_singles %d\n", solved_counter);
+        //     continue;
+        // }
     }
-
     print_solution(board);
 
-    // Clean up
+    // clean up
     free_sudoku(board);
     free(board);
     return 0;
