@@ -53,24 +53,33 @@ static int find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
 
                     for (int c = 0; c < p_cells[i]->num_candidates; c++)
                     {
-                        combinedCandidates[p_cells[i]->candidates[c] - 1] = 1;
+                        int candidateValue = p_cells[i]->candidates[c] - 1;
+                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
+                            combinedCandidates[candidateValue] = 1;
+                        }
                     }
 
                     for (int c = 0; c < p_cells[j]->num_candidates; c++)
                     {
-                        combinedCandidates[p_cells[j]->candidates[c] - 1] = 1;
+                        int candidateValue = p_cells[j]->candidates[c] - 1;
+                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
+                            combinedCandidates[candidateValue] = 1;
+                        }
                     }
 
                     for (int c = 0; c < p_cells[k]->num_candidates; c++)
                     {
-                        combinedCandidates[p_cells[k]->candidates[c] - 1] = 1;
+                        int candidateValue = p_cells[k]->candidates[c] - 1;
+                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
+                            combinedCandidates[candidateValue] = 1;
+                        }
                     }
 
                     // Check if there are exactly 3 candidates in the combined set
                     int count = 0;
                     int uniqueCandidates[3] = {0};
 
-                    for (int c = 0; c < BOARD_SIZE; c++)
+                    for (int c = 0; c < BOARD_SIZE && count < 3; c++)
                     {
                         if (combinedCandidates[c])
                         {
