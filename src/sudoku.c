@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "hidden_singles.h"
+void init_sudoku(SudokuBoard *p_board);
+void load_sudoku(SudokuBoard *p_board, char *input_text);
+int check_solved_cells(SudokuBoard *p_board, Cell ***p_solved_cells);
+bool show_possible(SudokuBoard *p_board, Cell **p_solved_cells, int counter);
+void free_sudoku(SudokuBoard *p_board);
 
 int main(int argc, char **argv)
 {
@@ -29,12 +33,14 @@ int main(int argc, char **argv)
             // printf("show_possible -> Yes\n");
             continue;
         }
+        /*
         solved_counter = hidden_singles(board);
         if (solved_counter)
         {
             printf("hidden_singles %d\n", solved_counter);
             continue;
         }
+        */
     }
     print_solution(board);
 
