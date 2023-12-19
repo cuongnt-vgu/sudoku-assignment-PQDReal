@@ -90,16 +90,6 @@ static int find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
                     if (count == 3)
                     {
                         // Hidden triple found, remove other candidates from the unit
-                        for (int m = 0; m < unit_size; m++)
-                        {
-                            if (m != i && m != j && m != k)
-                            {
-                                for (int c = 0; c < 3; c++)
-                                {
-                                    apply_constraint(&p_cells[m], uniqueCandidates[c]);
-                                }
-                            }
-                        }
                         hiddenTriplesCounter++;
                     }
                 }

@@ -44,16 +44,6 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
                     has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
                 {
                     // Hidden pair found, remove other candidates from the unit
-                    for (int k = 0; k < unit_size; k++)
-                    {
-                        if (k != i && k != j)
-                        {
-                            for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                            {
-                                apply_constraint(&p_cells[k], p_cells[i]->candidates[c]);
-                            }
-                        }
-                    }
                     hiddenPairsCounter++;
                 }
             }
