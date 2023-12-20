@@ -1,6 +1,5 @@
 #include "hidden_pairs.h"
 #include "sudoku.h"
-#include "utils.c" // Assuming utils.h contains apply_constraint
 
 // Helper function declarations
 static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);

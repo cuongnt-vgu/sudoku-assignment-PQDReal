@@ -32,44 +32,41 @@ int hidden_singles(SudokuBoard *p_board)
 
 static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
 {
-    for (int value = 1; value <= BOARD_SIZE; value++)
+    for (int i = 0; i < unit_size; i++)
     {
-        for (int i = 0; i < unit_size; i++)
+        if (!p_cells[i]->fixed)
         {
-            if (!p_cells[i]->fixed)
+            for (int c = 0; c < p_cells[i]->num_candidates; c++)
             {
-                for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                {
-                    bool isHiddenSingle = true;
+                bool isHiddenSingle = true;
 
-                    for (int j = 0; j < unit_size; j++)
+                for (int j = 0; j < unit_size; j++)
+                {
+                    if (i != j && !p_cells[j]->fixed)
                     {
-                        if (i != j && !p_cells[j]->fixed)
+                        for (int k = 0; k < p_cells[j]->num_candidates; k++)
                         {
-                            for (int k = 0; k < p_cells[j]->num_candidates; k++)
+                            if (p_cells[j]->candidates[k] == p_cells[i]->candidates[c])
                             {
-                                // If a candidate in a non-fixed square matches the candidate in the current cell,
-                                // it's not a hidden single
-                                if (p_cells[j]->candidates[k] == p_cells[i]->candidates[c])
-                                {
-                                    isHiddenSingle = false;
-                                    break;
-                                }
+                                isHiddenSingle = false;
+                                break;
                             }
                         }
                     }
+                }
 
-                    if (isHiddenSingle)
-                    {
-                        p_cells[i]->value = p_cells[i]->candidates[c];
-                        unset_candidate(p_cells[i], value);
-                        hiddenSinglesCounter++;
-                        return true;
-                    }
+                if (isHiddenSingle)
+                {
+                    p_cells[i]->value = p_cells[i]->candidates[c];
+                    unset_candidate(p_cells[i], p_cells[i]->value);
+                    hiddenSinglesCounter++;
+                    return true;
                 }
             }
         }
     }
+
     return false;
 }
+
 
