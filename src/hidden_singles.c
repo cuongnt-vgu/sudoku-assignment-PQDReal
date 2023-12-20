@@ -4,62 +4,72 @@
 
 int hiddenSinglesCounter;
 
-static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
+static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden singles logic here
 int hidden_singles(SudokuBoard *p_board)
 {
     hiddenSinglesCounter = 0;
-    find_hidden_singles_in_unit(p_board->data, BOARD_SIZE);
-    // Check rows
-    /*
-    for (int i = 0; i < BOARD_SIZE; i++)
+
+    while (1)
     {
-        find_hidden_singles_in_unit(p_board->p_rows[i], BOARD_SIZE);
+        int counter = 0;
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            if (find_hidden_singles_in_unit(p_board->p_rows[i], BOARD_SIZE)) counter++;
+            if (find_hidden_singles_in_unit(p_board->p_cols[i], BOARD_SIZE)) counter++;
+            if (find_hidden_singles_in_unit(p_board->p_boxes[i], BOARD_SIZE)) counter++;
+        }
+
+        if (counter == 0)
+        {
+            break;
+        }
     }
 
-    // Check columns
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_singles_in_unit(p_board->p_cols[i], BOARD_SIZE);
-    }
-
-    // Check boxes
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_singles_in_unit(p_board->p_boxes[i], BOARD_SIZE);
-    }
-    */
     return hiddenSinglesCounter;
 }
 
-static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
+static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
 {
     for (int value = 1; value <= BOARD_SIZE; value++)
     {
-        // Count occurrences of value in candidates
-        int count = 0;
-        Cell *candidateCell = NULL;
+        for (int i = 0; i < unit_size; i++)
+        {
+            if (!p_cells[i]->fixed)
+            {
+                for (int c = 0; c < p_cells[i]->num_candidates; c++)
+                {
+                    bool isHiddenSingle = true;
 
-        for (int i = 0; i < unit_size - 1; i++) {
-            for (int c = 0; c < p_cells[i]->num_candidates; c++) {
-                for (int j = i + 1; j < unit_size; j++) {
-                    if ((is_candidate(p_cells[i], p_cells[i]->candidates[c]) == 0) && 
-                        ((j - i < 9 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
-                        ((j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
-                        (j - i < 9 && (j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0))) {
-                        count++;
-                        candidateCell = p_cells[i];
+                    for (int j = 0; j < unit_size; j++)
+                    {
+                        if (i != j && !p_cells[j]->fixed)
+                        {
+                            for (int k = 0; k < p_cells[j]->num_candidates; k++)
+                            {
+                                // If a candidate in a non-fixed square matches the candidate in the current cell,
+                                // it's not a hidden single
+                                if (p_cells[j]->candidates[k] == p_cells[i]->candidates[c])
+                                {
+                                    isHiddenSingle = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (isHiddenSingle)
+                    {
+                        p_cells[i]->value = p_cells[i]->candidates[c];
+                        unset_candidate(p_cells[i], value);
+                        hiddenSinglesCounter++;
+                        return true;
+                    }
+                }
             }
         }
     }
-}
-
-        // If only one occurrence is found, it's a hidden single
-        if (count == 1 && candidateCell != NULL)
-        {
-            hiddenSinglesCounter++;
-        }
-    }
+    return false;
 }
 
