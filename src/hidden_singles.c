@@ -30,43 +30,32 @@ int hidden_singles(SudokuBoard *p_board)
     return hiddenSinglesCounter;
 }
 
-static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
+static bool find_hidden_single_in_unit(Cell **p_cells, int unit_size)
 {
-    for (int i = 0; i < unit_size; i++)
+    for (int value = 1; value <= BOARD_SIZE; value++)
     {
-        if (!p_cells[i]->fixed)
+        // Count occurrences of value in candidates
+        int count = 0;
+        Cell *candidateCell = NULL;
+
+        for (int i = 0; i < unit_size; i++)
         {
-            for (int c = 0; c < p_cells[i]->num_candidates; c++)
+            if (!p_cells[i]->fixed && is_candidate(p_cells[i], value))
             {
-                bool isHiddenSingle = true;
-
-                for (int j = 0; j < unit_size; j++)
-                {
-                    if (i != j && !p_cells[j]->fixed)
-                    {
-                        for (int k = 0; k < p_cells[j]->num_candidates; k++)
-                        {
-                            if (p_cells[j]->candidates[k] == p_cells[i]->candidates[c])
-                            {
-                                isHiddenSingle = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (isHiddenSingle)
-                {
-                    p_cells[i]->value = p_cells[i]->candidates[c];
-                    unset_candidate(p_cells[i], p_cells[i]->value);
-                    hiddenSinglesCounter++;
-                    return true;
-                }
+                count++;
+                candidateCell = p_cells[i];
             }
+        }
+
+        // If only one occurrence is found, it's a hidden single
+        if (count == 1 && candidateCell != NULL)
+        {
+            // Apply the constraint to the hidden single
+            apply_constraint(candidateCell, value);
+            return true;
         }
     }
 
     return false;
 }
-
 
