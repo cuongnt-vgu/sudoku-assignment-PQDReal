@@ -48,7 +48,7 @@ static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
                         {
                             if (p_cells[j]->candidates[k] == p_cells[i]->candidates[c])
                             {
-                                unset_candidate(p_cells[i], p_cells[i]->value);
+                                unset_candidate(p_cells[i], p_cells[i]->candidates[k]);
                                 isHiddenSingle = false;
                                 break;
                             }
