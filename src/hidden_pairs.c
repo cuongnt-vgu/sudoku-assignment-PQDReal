@@ -48,7 +48,15 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
                         {
                             for (int c = 0; c < p_cells[i]->num_candidates; c++)
                             {
-                                apply_constraint(&p_cells[k], p_cells[i]->candidates[c]);
+                                if (!is_candidate(p_cells[i], p_cells[i]->candidates[c]))
+                                {
+                                    p_cells[i]->candidates[c] = 0;
+                                }
+
+                                if (!is_candidate(p_cells[j], p_cells[j]->candidates[c]))
+                                {
+                                    p_cells[j]->candidates[c] = 0;
+                                }
                             }
                         }
                     }
