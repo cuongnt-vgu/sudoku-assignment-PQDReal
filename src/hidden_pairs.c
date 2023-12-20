@@ -42,24 +42,6 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
                 if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
                     has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
                 {
-                    for (int k = 0; k < unit_size; k++)
-                    {
-                        if (k != i && k != j)
-                        {
-                            for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                            {
-                                if (!is_candidate(p_cells[i], p_cells[i]->candidates[c]))
-                                {
-                                    p_cells[i]->candidates[c] = 0;
-                                }
-
-                                if (!is_candidate(p_cells[j], p_cells[j]->candidates[c]))
-                                {
-                                    p_cells[j]->candidates[c] = 0;
-                                }
-                            }
-                        }
-                    }
                     // Hidden pair found, remove other candidates from the unit
                     hiddenPairsCounter++;
                 }
