@@ -2,10 +2,8 @@
 #include "sudoku.h"
 
 int hiddenPairsCounter;
-// Helper function declarations
 static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);
 
-// Implement hidden pairs logic here
 int hidden_pairs(SudokuBoard *p_board)
 {
     hiddenPairsCounter = 0;
@@ -44,6 +42,16 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
                 if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
                     has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
                 {
+                    for (int k = 0; k < unit_size; k++)
+                    {
+                        if (k != i && k != j)
+                        {
+                            for (int c = 0; c < p_cells[i]->num_candidates; c++)
+                            {
+                                apply_constraint(&p_cells[k], p_cells[i]->candidates[c]);
+                            }
+                        }
+                    }
                     // Hidden pair found, remove other candidates from the unit
                     hiddenPairsCounter++;
                 }

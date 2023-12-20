@@ -48,6 +48,19 @@ static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size)
                     if (has_same_candidates_p(p_cells[i]->candidates, p_cells[j]->candidates))
                     {
                         // Naked pair found, remove candidates from other cells in the unit
+                        for (int k = 0; k < unit_size; k++)
+                        {
+                            if (k != i && k != j)
+                            {
+                                for (int value = 1; value <= BOARD_SIZE; value++)
+                                {
+                                    if (p_cells[i]->candidates[value - 1])
+                                    {
+                                        apply_constraint(&p_cells[k], value);
+                                    }
+                                }
+                            }
+                        }
                         nakedPairsCounter++;
                     }
                 }

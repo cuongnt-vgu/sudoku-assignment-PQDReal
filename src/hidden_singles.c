@@ -51,6 +51,7 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
         // If only one occurrence is found, it's a hidden single
         if (count == 1 && candidateCell != NULL)
         {
+            apply_constraint(candidateCell, value);
             hiddenSinglesCounter++;
         }
     }
