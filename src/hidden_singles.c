@@ -4,7 +4,7 @@
 
 int hiddenSinglesCounter;
 
-static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
+static bool find_hidden_single_in_unit(Cell **p_cells, int unit_size);
 
 static bool find_hidden_single_in_unit(Cell **p_cells, int unit_size)
 {
