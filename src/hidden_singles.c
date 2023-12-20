@@ -10,7 +10,9 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 int hidden_singles(SudokuBoard *p_board)
 {
     hiddenSinglesCounter = 0;
+    find_hidden_singles_in_unit(p_board->data, BOARD_SIZE);
     // Check rows
+    /*
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         find_hidden_singles_in_unit(p_board->p_rows[i], BOARD_SIZE);
@@ -29,6 +31,7 @@ int hidden_singles(SudokuBoard *p_board)
     }
 
     return hiddenSinglesCounter;
+    */
 }
 
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
@@ -46,14 +49,12 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
                         ((j - i < 9 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
                         ((j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
                         (j - i < 9 && (j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0))) {
-                            
                         count++;
                         candidateCell = p_cells[i];
             }
         }
     }
 }
-
 
         // If only one occurrence is found, it's a hidden single
         if (count == 1 && candidateCell != NULL)
