@@ -29,9 +29,8 @@ int hidden_singles(SudokuBoard *p_board)
     {
         find_hidden_singles_in_unit(p_board->p_boxes[i], BOARD_SIZE);
     }
-
-    return hiddenSinglesCounter;
     */
+    return hiddenSinglesCounter;
 }
 
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
