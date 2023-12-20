@@ -6,30 +6,6 @@ int hiddenSinglesCounter;
 
 static bool find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
-// Implement hidden singles logic here
-int hidden_singles(SudokuBoard *p_board)
-{
-    hiddenSinglesCounter = 0;
-
-    while (1)
-    {
-        int counter = 0;
-        for (int i = 0; i < BOARD_SIZE; i++)
-        {
-            if (find_hidden_singles_in_unit(p_board->p_rows[i], BOARD_SIZE)) counter++;
-            if (find_hidden_singles_in_unit(p_board->p_cols[i], BOARD_SIZE)) counter++;
-            if (find_hidden_singles_in_unit(p_board->p_boxes[i], BOARD_SIZE)) counter++;
-        }
-
-        if (counter == 0)
-        {
-            break;
-        }
-    }
-
-    return hiddenSinglesCounter;
-}
-
 static bool find_hidden_single_in_unit(Cell **p_cells, int unit_size)
 {
     for (int value = 1; value <= BOARD_SIZE; value++)
@@ -59,3 +35,25 @@ static bool find_hidden_single_in_unit(Cell **p_cells, int unit_size)
     return false;
 }
 
+int hidden_singles(SudokuBoard *p_board)
+{
+    hiddenSinglesCounter = 0;
+
+    while (1)
+    {
+        int counter = 0;
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            if (find_hidden_single_in_unit(p_board->p_rows[i], BOARD_SIZE)) counter++;
+            if (find_hidden_single_in_unit(p_board->p_cols[i], BOARD_SIZE)) counter++;
+            if (find_hidden_single_in_unit(p_board->p_boxes[i], BOARD_SIZE)) counter++;
+        }
+
+        if (counter == 0)
+        {
+            break;
+        }
+    }
+
+    return hiddenSinglesCounter;
+}
