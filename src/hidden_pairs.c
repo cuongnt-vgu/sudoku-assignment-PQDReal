@@ -36,7 +36,7 @@ static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
         for (int j = i + 1; j < unit_size; j++)
         {
             // Check if both cells are empty
-            if (p_cells[i]->value == 0 && p_cells[j]->value == 0)
+            if (p_cells[i]->value == 0 && p_cells[j]->value == 0 && i == j - 1 || p_cells[i]->value == 0 && p_cells[j]->value == 0 && i == j - 9)
             {
                 // Check if both cells have exactly two candidates
                 if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
