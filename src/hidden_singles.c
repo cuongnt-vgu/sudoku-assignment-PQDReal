@@ -39,14 +39,21 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
         int count = 0;
         Cell *candidateCell = NULL;
 
-        for (int i = 0; i < unit_size; i++)
-        {
-            if (is_candidate(p_cells[i], value))
-            {
-                count++;
-                candidateCell = p_cells[i];
+        for (int i = 0; i < unit_size - 1; i++) {
+            for (int c = 0; c < p_cells[i]->num_candidates; c++) {
+                for (int j = i + 1; j < unit_size; j++) {
+                    if ((is_candidate(p_cells[i], p_cells[i]->candidates[c]) == 0) && 
+                        ((j - i < 9 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
+                        ((j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0) || 
+                        (j - i < 9 && (j - i) % 9 == 0 && is_candidate(p_cells[j], p_cells[i]->candidates[c]) == 0))) {
+                            
+                        count++;
+                        candidateCell = p_cells[i];
             }
         }
+    }
+}
+
 
         // If only one occurrence is found, it's a hidden single
         if (count == 1 && candidateCell != NULL)
