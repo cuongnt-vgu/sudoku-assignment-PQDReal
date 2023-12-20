@@ -4,11 +4,12 @@
 // Helper function declarations
 static void find_naked_pairs_in_unit(Cell **p_cells, int unit_size);
 
-int nakedPairsCounter = 0;
+int nakedPairsCounter;
 
 // Implement naked pairs logic here
 int naked_pairs(SudokuBoard *p_board)
 {
+    nakedPairsCounter = 0;
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
     {

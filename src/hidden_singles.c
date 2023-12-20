@@ -2,14 +2,14 @@
 #include "hidden_singles.h"
 #include "sudoku.h"
 
-int hiddenSinglesCounter = 0;
+int hiddenSinglesCounter;
 
 static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size);
 
 // Implement hidden singles logic here
 int hidden_singles(SudokuBoard *p_board)
 {
-
+    hiddenSinglesCounter = 0;
     // Check rows
     for (int i = 0; i < BOARD_SIZE; i++)
     {
@@ -41,7 +41,7 @@ static void find_hidden_singles_in_unit(Cell **p_cells, int unit_size)
 
         for (int i = 0; i < unit_size; i++)
         {
-            if (p_cells[i]->num_candidates > 1 && is_candidate(p_cells[i], value))
+            if (is_candidate(p_cells[i], value))
             {
                 count++;
                 candidateCell = p_cells[i];
