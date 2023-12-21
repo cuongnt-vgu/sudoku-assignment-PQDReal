@@ -223,7 +223,7 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, char* text, int un
                                 }
                             }
                         }
-
+                    }
                     if (isHiddenSingle)
                     {
                         p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->value = c;
