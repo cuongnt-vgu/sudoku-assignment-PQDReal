@@ -240,9 +240,9 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, char* text, int un
                     {
                         for (int q = 0; q < unit_size; q++)
                         {
-                            if (p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3] == 1 && q != c)
+                            if (p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->candidates[q] == 1 && q != c)
                             {
-                                p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3] = 0;
+                                p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->candidates[q] = 0;
                             }
                         }
                         p_board->p_rows[i][j]->num_candidates = 1;
