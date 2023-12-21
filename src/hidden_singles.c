@@ -78,8 +78,10 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
                         for (int m = 0; m < num_r; m++)
                         {
                             if (p_board->p_rows[r][a]->candidates[m] == value)
+                            {
                                 p_board->p_rows[r][a]->candidates[m] = 0;
                                 p_board->p_rows[r][a]->num_candidates -= 1;
+                            }
                         }
                     }
 
@@ -90,8 +92,10 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
                         for (int n = 0; n < num_c; n++)
                         {
                             if (p_board->p_cols[t][d]->candidates[n] == value)
+                            {
                                 p_board->p_cols[t][d]->candidates[n] = 0;
                                 p_board->p_cols[t][d]->num_candidates -= 1;
+                            }
                         }
                     }
 
@@ -102,8 +106,10 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
                         for (int p = 0; p < num_b; p++)
                         {
                             if (p_board->p_boxes[b][f]->candidates[p] == value)
+                            {
                                 p_board->p_boxes[b][f]->candidates[p] = 0;
                                 p_board->p_boxes[b][f]->num_candidates -= 1;
+                            }
                         }
                     }
                     return 1;
