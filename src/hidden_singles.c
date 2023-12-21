@@ -57,8 +57,11 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
 
                 if (isHiddenSingle)
                 {
-                    p_cells[i]->fixed = true;
                     int value = p_cells[i]->candidates[c];
+                    p_cells[i]->value = p_cells[i]->candidates[c];
+                    p_cells[i]->fixed = true;
+                    p_cells[i]->num_candidates = 0;
+                    /*
                     for (int s = 0; s < p_cells[i]->num_candidates; s++)
                     {
                         if (s != c)
@@ -66,41 +69,48 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
                             p_cells[i]->candidates[s] = 0;
                         }
                     }
+                    */
 
                     int r = p_cells[i]->row_index;
                     for (int a = 0; a < unit_size; a++)
                     {
-                        for (int m = 0; m < p_board->p_rows[r][a]->num_candidates; m++)
+                        int num_r = p_board->p_rows[r][a]->num_candidates;
+                        for (int m = 0; m < num_r; m++)
                         {
                             if (p_board->p_rows[r][a]->candidates[m] == value)
                                 p_board->p_rows[r][a]->candidates[m] = 0;
+                                p_board->p_rows[r][a]->num_candidates -= 1;
                         }
                     }
 
                     int t = p_cells[i]->col_index;
                     for (int d = 0; d < unit_size; d++)
                     {
-                        for (int n = 0; n < p_board->p_cols[r][d]->num_candidates; n++)
+                        int num_c = p_board->p_rows[t][d]->num_candidates;
+                        for (int n = 0; n < num_c; n++)
                         {
                             if (p_board->p_cols[t][d]->candidates[n] == value)
                                 p_board->p_cols[t][d]->candidates[n] = 0;
+                                p_board->p_cols[t][d]->num_candidates -= 1;
                         }
                     }
 
                     int b = p_cells[i]->box_index;
                     for (int f = 0; f < unit_size; f++)
                     {
-                        for (int p = 0; p < p_board->p_boxes[b][f]->num_candidates; p++)
+                        int num_b = p_board->p_boxes[b][f]->num_candidates;
+                        for (int p = 0; p < num_b; p++)
                         {
                             if (p_board->p_boxes[b][f]->candidates[p] == value)
                                 p_board->p_boxes[b][f]->candidates[p] = 0;
+                                p_board->p_boxes[b][f]->num_candidates -= 1;
                         }
                     }
-                    return true;
+                    return 1;
                 }
             }
         }
     }
 
-    return false;
+    return 0;
 }
