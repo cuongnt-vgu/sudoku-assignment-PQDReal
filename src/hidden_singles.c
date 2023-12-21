@@ -76,13 +76,13 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, in
                         }
                     }
 
-                    int c = p_cells[i]->col_index;
+                    int t = p_cells[i]->col_index;
                     for (int d = 0; d < unit_size; d++)
                     {
                         for (int n = 0; n < p_board->p_cols[r][d]->num_candidates; n++)
                         {
-                            if (p_board->p_cols[c][d]->candidates[n] == value)
-                                p_board->p_cols[c][d]->candidates[n] = 0;
+                            if (p_board->p_cols[t][d]->candidates[n] == value)
+                                p_board->p_cols[t][d]->candidates[n] = 0;
                         }
                     }
 
