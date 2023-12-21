@@ -93,14 +93,16 @@ void print_string_candidates(Cell *p_cell, char *textData)
     int *candidates = get_candidates(p_cell);
     int len = p_cell->num_candidates;
 
-    int bin_candidates[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int bin_candidates[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     if (p_cell->fixed)
         bin_candidates[0] = 1;
 
     for (int i = 0; i < len; i++)
     {
-        bin_candidates[candidates[i]] = 1;
+        if (candidates[i] >= 1 && candidates[i] <= 9)
+            bin_candidates[candidates[i]] = 1;
     }
+
     int left_index = toInteger(&(bin_candidates[5]), 5);
     int right_index = toInteger(&(bin_candidates[0]), 5);
     sprintf(textData, "%c%c", mapping[left_index], mapping[right_index]);
