@@ -62,8 +62,14 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, char* text, int un
                     if (isHiddenSingle)
                     {
                         //int value = c;
-                        p_board->p_rows[i][j]->value = c;
-                        p_board->p_rows[i][j]->fixed = true;
+                        for (int q = 0; q < unit_size; q++)
+                        {
+                            if (p_board->p_rows[i][j]->candidates[q] == 1 && q != c)
+                            {
+                                p_board->p_rows[i][j]->candidates[q] = 0;
+                            }
+                        }
+                        p_board->p_rows[i][j]->num_candidates = 1;
                         //p_board->p_rows[i][j]->num_candidates = 1;
                         /*
                         for (int s = 0; s < p_cells[i]->num_candidates; s++)
@@ -144,8 +150,14 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, char* text, int un
                     }
                     if (isHiddenSingle)
                     {
-                        p_board->p_cols[j][i]->value = c;
-                        p_board->p_cols[j][i]->fixed = true;
+                        for (int q = 0; q < unit_size; q++)
+                        {
+                            if (p_board->p_cols[j][i]->candidates[q] == 1 && q != c)
+                            {
+                                p_board->p_cols[j][i]->candidates[q] = 0;
+                            }
+                        }
+                        p_board->p_cols[j][i]->num_candidates = 1;
                         //p_board->p_cols[j][i]->num_candidates = 1;
                         /*
                         for (int s = 0; s < p_cells[i]->num_candidates; s++)
@@ -226,8 +238,14 @@ static bool find_hidden_singles_in_unit(SudokuBoard *p_board, char* text, int un
                     }
                     if (isHiddenSingle)
                     {
-                        p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->value = c;
-                        p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->fixed = true;
+                        for (int q = 0; q < unit_size; q++)
+                        {
+                            if (p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3] == 1 && q != c)
+                            {
+                                p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3] = 0;
+                            }
+                        }
+                        p_board->p_rows[i][j]->num_candidates = 1;
                         //p_board->p_boxes[(i / 3) * 3 + j / 3][(i % 3) * 3 + j % 3]->num_candidates = 1;
                         /*
                         for (int s = 0; s < p_cells[i]->num_candidates; s++)
