@@ -27,7 +27,7 @@ int hidden_singles(SudokuBoard *p_board)
     }
     hiddenSinglesCounter_current += hiddenSinglesCounter;
 
-    return hiddenSinglesCounter;
+    return hiddenSinglesCounter_current;
 }
 
 static bool find_hidden_singles_in_unit(SudokuBoard *p_board, Cell **p_cells, int unit_size)
