@@ -13,18 +13,14 @@ int hidden_singles(SudokuBoard *p_board)
     while (1)
     {
         hiddenSinglesCounter = 0;
-        int counter = 0;
         for (int i = 0; i < BOARD_SIZE; i++)
         {
             if (find_hidden_singles_in_unit(p_board, p_board->p_rows[i], BOARD_SIZE)) hiddenSinglesCounter++;
-            //pls find a way to remove candidates in the same row, column , box as the hidden single cell
             if (find_hidden_singles_in_unit(p_board, p_board->p_cols[i], BOARD_SIZE)) hiddenSinglesCounter++;
-            //pls find a way to remove candidates in the same row, column , box as the hidden single cell
             if (find_hidden_singles_in_unit(p_board, p_board->p_boxes[i], BOARD_SIZE)) hiddenSinglesCounter++;
-            //pls find a way to remove candidates in the same row, column , box as the hidden single cell
         }
 
-        if (counter == 0)
+        if (hiddenSinglesCounter == 0)
         {
             break;
         }
