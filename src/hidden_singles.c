@@ -35,8 +35,6 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                     bool found_b = false;
                     if (p_board->p_rows[i][j]->candidates[c] == 1)
                     {
-                        found_r = false;
-                        isHiddenSingle_r = false;
                         for (int u = 0; u < unit_size; u++)
                         {
                             for (int d = 0; d < unit_size; d++)
