@@ -97,12 +97,12 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                         p_board->p_rows[i][a]->candidates[m] = 0;
                                         p_board->p_rows[i][a]->num_candidates -= 1;
                                     }
-                                    if (p_board->p_cols[i][a]->candidates[m] == 1 && m == c && !p_board->p_cols[i][a]->fixed)
+                                    else if (p_board->p_cols[i][a]->candidates[m] == 1 && m == c && !p_board->p_cols[i][a]->fixed)
                                     {
                                         p_board->p_cols[i][a]->candidates[m] = 0;
                                         p_board->p_cols[i][a]->num_candidates -= 1;
                                     }
-                                    if (p_board->p_boxes[i][a]->candidates[m] == 1 && m == c && !p_board->p_boxes[i][a]->fixed)
+                                    else if (p_board->p_boxes[i][a]->candidates[m] == 1 && m == c && !p_board->p_boxes[i][a]->fixed)
                                     {
                                         p_board->p_boxes[i][a]->candidates[m] = 0;
                                         p_board->p_boxes[i][a]->num_candidates -= 1;
