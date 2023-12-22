@@ -38,89 +38,44 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                             int count_r = 0;
                             for (int d = 0; d < unit_size; d++)
                             {
-                                if (!p_board->p_rows[i][u]->fixed && p_board->p_rows[i][u]->candidates[d] == 1 && d == c)
+                                if (p_board->p_rows[i][u]->candidates[d] == 1 && d == c)
                                 {
                                     count_r++;
                                 }
                             if (count_r == 1)
                             {
-                                for (int ad = 0; ad < unit_size; ad++)
-                                {
-                                    if (p_board->p_rows[i][ad]->fixed && p_board->p_rows[i][ad]->candidates[c] != 1)
-                                    {
-                                        match_fixed = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                }
-                                if (!match_fixed)
-                                {
-                                    isHiddenSingle_r = true;
-                                    hs_counter++;
-                                    break;
-                                }
+                                isHiddenSingle_b = true;
+                                hs_counter++;
+                                break;
                             }
                             else
                             {
                                 int count_c = 0;
                                 for (int e = 0; e < unit_size; e++)
                                 {
-                                    if (!p_board->p_cols[i][u]->fixed && p_board->p_cols[i][u]->candidates[e] == 1 && e == c) count_c++;
+                                    if (p_board->p_cols[i][u]->candidates[e] == 1 && e == c) count_c++;
                                 }
                                 if (count_c == 1)
                                 {
-                                    for (int ed = 0; ed < unit_size; ed++)
-                                    {
-                                        if (p_board->p_cols[i][ed]->fixed && p_board->p_cols[i][ed]->candidates[c] != 1)
-                                        {
-                                            match_fixed = true;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            continue;
-                                        }
-                                    }
-                                    if (!match_fixed)
-                                    {
-                                        isHiddenSingle_c = true;
-                                        hs_counter++;
-                                        break;
-                                    }
+                                    isHiddenSingle_b = true;
+                                    hs_counter++;
+                                    break;
                                 }
                                 else
                                 {
                                     int count_b = 0;
                                     for (int f = 0; f < unit_size; f++)
                                     {
-                                        if (!p_board->p_cols[i][u]->fixed && p_board->p_cols[i][u]->candidates[f] == 1 && f == c) count_b++;
+                                        if (p_board->p_boxes[i][u]->candidates[f] == 1 && f == c) count_b++;
                                     }
-                                    if (count_r == 1)
+                                    if (count_b == 1)
                                     {
-                                        for (int fd = 0; fd < unit_size; fd++)
-                                        {
-                                            if (p_board->p_rows[i][fd]->fixed && p_board->p_rows[i][fd]->candidates[c] != 1)
-                                            {
-                                                match_fixed = true;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                continue;
-                                            }
-                                        }
-                                        if (!match_fixed)
-                                        {
-                                            isHiddenSingle_b = true;
-                                            hs_counter++;
-                                            break;
-                                        }
+                                        isHiddenSingle_b = true;
+                                        hs_counter++;
+                                        break;
                                     }
                                 }
-                            }
+                                }
                             }
                         }
                         Cell *r_pos = p_board->p_rows[0][0];
@@ -211,3 +166,17 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
     }
     return hs_counter;
 }
+/*
+for (int fd = 0; fd < unit_size; fd++)
+                                        {
+                                            if (p_board->p_rows[i][fd]->fixed && p_board->p_rows[i][fd]->candidates[c] != 1)
+                                            {
+                                                match_fixed = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                continue;
+                                            }
+                                        }
+*/
