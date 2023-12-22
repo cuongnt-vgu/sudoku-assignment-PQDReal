@@ -158,6 +158,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                             }
                         }
                     }
+                    break;
                 }
             }
         }
