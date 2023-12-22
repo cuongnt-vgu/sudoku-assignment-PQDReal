@@ -18,7 +18,7 @@ int hidden_singles(SudokuBoard *p_board)
 
 static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
 {
-    int hs_counter = 0;
+    static int hs_counter = 0;
     for (int i = 0; i < unit_size; i++)
     {
         for (int j = 0; j < unit_size; j++)
@@ -27,9 +27,9 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             {
                 for (int c = 0; c < unit_size; c++)
                 {
-                    bool isHiddenSingle_r = false;
-                    bool isHiddenSingle_c = false;
-                    bool isHiddenSingle_b = false;
+                    static bool isHiddenSingle_r = false;
+                    static bool isHiddenSingle_c = false;
+                    static bool isHiddenSingle_b = false;
                     if (p_board->p_rows[i][j]->candidates[c] == 1)
                     {
                         for (int u = 0; u < unit_size; u++)
