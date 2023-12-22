@@ -97,15 +97,27 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                         p_board->p_rows[i][a]->candidates[m] = 0;
                                         p_board->p_rows[i][a]->num_candidates -= 1;
                                     }
-                                    else if (p_board->p_cols[i][a]->candidates[m] == 1 && m == c && !p_board->p_cols[i][a]->fixed)
+                                }
+                            }
+                            for (int b = 0; b < unit_size; b++)
+                            {
+                                for (int n = 0; n < unit_size; n++)
+                                {
+                                    if (p_board->p_cols[i][b]->candidates[n] == 1 && n == c && !p_board->p_cols[i][b]->fixed)
                                     {
-                                        p_board->p_cols[i][a]->candidates[m] = 0;
-                                        p_board->p_cols[i][a]->num_candidates -= 1;
+                                        p_board->p_cols[i][b]->candidates[n] = 0;
+                                        p_board->p_cols[i][b]->num_candidates -= 1;
                                     }
-                                    else if (p_board->p_boxes[i][a]->candidates[m] == 1 && m == c && !p_board->p_boxes[i][a]->fixed)
+                                }
+                            }
+                            for (int c = 0; c < unit_size; c++)
+                            {
+                                for (int r = 0; r < unit_size; r++)
+                                {
+                                    if (p_board->p_boxes[i][c]->candidates[r] == 1 && r == c && !p_board->p_boxes[i][c]->fixed)
                                     {
-                                        p_board->p_boxes[i][a]->candidates[m] = 0;
-                                        p_board->p_boxes[i][a]->num_candidates -= 1;
+                                        p_board->p_boxes[i][c]->candidates[r] = 0;
+                                        p_board->p_boxes[i][c]->num_candidates -= 1;
                                     }
                                 }
                             }
