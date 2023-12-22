@@ -37,13 +37,13 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                         {
                             for (int d = 0; d < unit_size; d++)
                             {
-                                if (!p_board->p_rows[i][u]->fixed && p_board->p_rows[i][u]->candidates[d] == 1 && d == c)
+                                if (!p_board->p_rows[i][u]->fixed && p_board->p_rows[i][u]->candidates[d] == 1 && d == c && j != u)
                                 {
                                     count_r++;
                                 }
                             }
                         }
-                        if (count_r == 1)
+                        if (count_r == 0)
                         {
                             for (int ad = 0; ad < unit_size; ad++)
                             {
@@ -62,13 +62,13 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                             {
                                 for (int e = 0; e < unit_size; e++)
                                 {
-                                    if (!p_board->p_rows[v][j]-> fixed && p_board->p_rows[v][j]->candidates[e] == 1 && e == c)
+                                    if (!p_board->p_rows[v][j]->fixed && p_board->p_rows[v][j]->candidates[e] == 1 && e == c && i != v)
                                     {
                                         count_c++;
                                     }
                                 }
                             }
-                            if (count_c == 1)
+                            if (count_c == 0)
                             {
                                 for (int ae = 0; ae < unit_size; ae++)
                                 {
@@ -90,14 +90,14 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 {
                                     for (int f = 0; f < unit_size; f++)
                                     {
-                                        if (!p_board->p_rows[w][y]-> fixed && p_board->p_rows[(i / 3) * 3 + w / 3][(i % 3) * 3 + w % 3]->candidates[f] == 1 && f == c)
+                                        if (!p_board->p_rows[w][y]->fixed && p_board->p_rows[w][y]->candidates[f] == 1 && f == c && i != w && j != y)
                                         {
                                             count_b++;
                                         }
                                     }
                                 }
                             }
-                            if (count_b == 1)
+                            if (count_b == 0)
                             {
                                 for (int ae = 0; ae < unit_size; ae++)
                                 {
