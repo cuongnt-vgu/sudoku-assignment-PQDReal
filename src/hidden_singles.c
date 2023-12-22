@@ -27,7 +27,6 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             {
                 for (int c = 0; c < unit_size; c++)
                 {
-                    bool match_fixed = true;
                     bool isHiddenSingle_r = false;
                     bool isHiddenSingle_c = false;
                     bool isHiddenSingle_b = false;
