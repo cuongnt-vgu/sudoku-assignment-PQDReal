@@ -1,4 +1,4 @@
-#include <stddef.h>
+#include <stdlib.h>
 #include "hidden_singles.h"
 #include "sudoku.h"
 #include <string.h>
@@ -77,7 +77,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 x_pos[hs_counter] = i;
                                 y_pos[hs_counter] = j;
                                 val[hs_counter] = c;
-                                isHiddenSingle_r = true;
+                                isHiddenSingle_c = true;
                                 hs_counter++;
                             }
                         }
@@ -103,7 +103,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 x_pos[hs_counter] = i;
                                 y_pos[hs_counter] = j;
                                 val[hs_counter] = c;
-                                isHiddenSingle_r = true;
+                                isHiddenSingle_b = true;
                                 hs_counter++;
                             }
                         }
