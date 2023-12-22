@@ -92,15 +92,10 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                             {
                                 for (int m = 0; m < unit_size; m++)
                                 {
-                                    if (m == c)
-                                    {
-                                        p_board->p_rows[i][a]->candidates[m] = 0;
-                                    }
-
                                     if (p_board->p_rows[i][a]->candidates[m] == 1 && m == c && !p_board->p_rows[i][a]->fixed && a != j)
                                     {
-                                        
-                                        //p_board->p_rows[i][a]->num_candidates -= 1;
+                                        p_board->p_rows[i][a]->candidates[m] = 0;
+                                        p_board->p_rows[i][a]->num_candidates -= 1;
                                     }
                                 }
                             }
@@ -111,7 +106,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                     if (p_board->p_cols[i][b]->candidates[n] == 1 && n == c && !p_board->p_cols[i][b]->fixed && b != j)
                                     {
                                         p_board->p_cols[i][b]->candidates[n] = 0;
-                                        //p_board->p_cols[i][b]->num_candidates -= 1;
+                                        p_board->p_cols[i][b]->num_candidates -= 1;
                                     }
                                 }
                             }
@@ -122,7 +117,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                     if (p_board->p_boxes[i][e]->candidates[r] == 1 && r == c && !p_board->p_boxes[i][e]->fixed && e != j)
                                     {
                                         p_board->p_boxes[i][e]->candidates[r] = 0;
-                                        //p_board->p_boxes[i][e]->num_candidates -= 1;
+                                        p_board->p_boxes[i][e]->num_candidates -= 1;
                                     }
                                 }
                             }
