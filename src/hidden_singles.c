@@ -48,16 +48,26 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 {
                                     found_r = true;
                                 }
+                                else if (p_board->p_rows[u][j]->fixed == false && p_board->p_rows[u][i]->candidates[d] == 1 && d == c && u != i)
+                                {
+                                    found_c = true;
+                                }
+                                else if (p_board->p_boxes[i][u]->fixed == false && p_board->p_boxes[i][u]->candidates[d] == 1 && d == c && j != u)
+                                {
+                                    found_b = true;
+                                }
                             }
                         }
-                        if (!found_r)
+                        if (!found_r || !found_c || found_b)
                         {
                             x_pos[hs_counter] = i;
                             y_pos[hs_counter] = j;
                             val[hs_counter] = c;
                             isHiddenSingle_r = true;
                             hs_counter++;
+                            break;
                         }
+                        /*
                         if (!isHiddenSingle_r)
                         {
                             found_c = false;
@@ -107,6 +117,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 hs_counter++;
                             }
                         }
+                        */
                     }
                 }
             }
