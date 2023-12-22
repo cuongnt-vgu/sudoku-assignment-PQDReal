@@ -27,6 +27,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             {
                 for (int c = 0; c < unit_size; c++)
                 {
+                    bool match_fixed = true;
                     bool isHiddenSingle_r = false;
                     bool isHiddenSingle_c = false;
                     bool isHiddenSingle_b = false;
@@ -43,9 +44,24 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 }
                             if (count_r == 1)
                             {
-                                isHiddenSingle_r = true;
-                                hs_counter++;
-                                break;
+                                for (int ad = 0; ad < unit_size; ad++)
+                                {
+                                    if (p_board->p_rows[i][ad]->fixed && p_board->p_rows[i][ad]->value != c)
+                                    {
+                                        match_fixed = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
+                                }
+                                if (!match_fixed)
+                                {
+                                    isHiddenSingle_r = true;
+                                    hs_counter++;
+                                    break;
+                                }
                             }
                             else
                             {
@@ -56,9 +72,24 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 }
                                 if (count_c == 1)
                                 {
-                                    isHiddenSingle_c = true;
-                                    hs_counter++;
-                                    break;
+                                    for (int ed = 0; ed < unit_size; ed++)
+                                    {
+                                        if (p_board->p_cols[i][ed]->fixed && p_board->p_cols[i][ed]->value != c)
+                                        {
+                                            match_fixed = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    if (!match_fixed)
+                                    {
+                                        isHiddenSingle_c = true;
+                                        hs_counter++;
+                                        break;
+                                    }
                                 }
                                 else
                                 {
@@ -67,11 +98,26 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                     {
                                         if (!p_board->p_cols[i][u]->fixed && p_board->p_cols[i][u]->candidates[f] == 1 && f == c) count_b++;
                                     }
-                                    if (count_b == 1)
+                                    if (count_r == 1)
                                     {
-                                        isHiddenSingle_b = true;
-                                        hs_counter++;
-                                        break;
+                                        for (int fd = 0; fd < unit_size; fd++)
+                                        {
+                                            if (p_board->p_rows[i][fd]->fixed && p_board->p_rows[i][fd]->value != c)
+                                            {
+                                                match_fixed = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                        if (!match_fixed)
+                                        {
+                                            isHiddenSingle_b = true;
+                                            hs_counter++;
+                                            break;
+                                        }
                                     }
                                 }
                             }
