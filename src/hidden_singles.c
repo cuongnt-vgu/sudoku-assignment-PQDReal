@@ -32,39 +32,39 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                     static bool isHiddenSingle_b = false;
                     if (p_board->p_rows[i][j]->candidates[c] == 1)
                     {
+                        int count_r = 0;
                         for (int u = 0; u < unit_size; u++)
                         {
-                            int count_r = 0;
                             for (int d = 0; d < unit_size; d++)
                             {
-                                if (!p_board->p_rows[i][u]-> fixed && p_board->p_rows[i][u]->candidates[d] == 1 && d == c)
+                                if (!p_board->p_rows[i][u]->fixed && p_board->p_rows[i][u]->candidates[d] == 1 && d == c)
                                 {
                                     count_r++;
                                 }
                             }
-                            if (count_r == 1)
+                        }
+                        if (count_r == 1)
+                        {
+                            for (int ad = 0; ad < unit_size; ad++)
                             {
-                                for (int ad = 0; ad < unit_size; ad++)
-                                {
-                                   p_board->p_rows[i][j]->candidates[ad] = 0;
-                                }
-                                p_board->p_rows[i][j]->candidates[c] = 1;
-                                p_board->p_rows[i][j]->num_candidates = 1;
-                                p_board->p_rows[i][j]->fixed = true;
-                                isHiddenSingle_r = true;
-                                break;
+                                p_board->p_rows[i][j]->candidates[ad] = 0;
                             }
-                            if (isHiddenSingle_r) 
-                            {
-                                hs_counter++;
-                                break;
-                            }
+                            p_board->p_rows[i][j]->candidates[c] = 1;
+                            p_board->p_rows[i][j]->num_candidates = 1;
+                            p_board->p_rows[i][j]->fixed = true;
+                            isHiddenSingle_r = true;
+                            break;
+                        }
+                        if (isHiddenSingle_r) 
+                        {
+                            hs_counter++;
+                            break;
                         }
                         if (!isHiddenSingle_r)
                         {
+                            int count_c = 0;
                             for (int v = 0; v < unit_size; v++)
                             {
-                                int count_c = 0;
                                 for (int e = 0; e < unit_size; e++)
                                 {
                                     if (!p_board->p_rows[v][j]-> fixed && p_board->p_rows[v][j]->candidates[e] == 1 && e == c)
@@ -72,23 +72,23 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                         count_c++;
                                     }
                                 }
-                                if (count_c == 1)
+                            }
+                            if (count_c == 1)
+                            {
+                                for (int ae = 0; ae < unit_size; ae++)
                                 {
-                                    for (int ae = 0; ae < unit_size; ae++)
-                                    {
-                                        p_board->p_rows[i][j]->candidates[ae] = 0;
-                                    }
-                                    p_board->p_rows[i][j]->candidates[c] = 1;
-                                    p_board->p_rows[i][j]->num_candidates = 1;
-                                    p_board->p_rows[i][j]->fixed = true;
-                                    isHiddenSingle_c = true;
-                                    break;
+                                    p_board->p_rows[i][j]->candidates[ae] = 0;
                                 }
-                                if (isHiddenSingle_c) 
-                                {
-                                    hs_counter++;
-                                    break;
-                                }
+                                p_board->p_rows[i][j]->candidates[c] = 1;
+                                p_board->p_rows[i][j]->num_candidates = 1;
+                                p_board->p_rows[i][j]->fixed = true;
+                                isHiddenSingle_c = true;
+                                break;
+                            }
+                            if (isHiddenSingle_c) 
+                            {
+                                hs_counter++;
+                                break;
                             }
                         }
                         if (!isHiddenSingle_c)
