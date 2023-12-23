@@ -3,6 +3,7 @@
 #include "sudoku.h"
 #include <string.h>
 
+typedef struct HiddenSingle;
 
 static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size);
 
@@ -20,6 +21,7 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
 {
     int hs_counter = 0;
     int index = 0;
+    HiddenSingle *singles = malloc(0);
     int *x_pos = malloc(unit_size*unit_size*sizeof(int));
     int *y_pos = malloc(unit_size*unit_size*sizeof(int));
     int *val = malloc(unit_size*unit_size*sizeof(int));
@@ -38,10 +40,19 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             }
             if (r_count == 1)
             {
-                x_pos[hs_counter] = i;
-                y_pos[hs_counter] = index;
-                val[hs_counter] = c;
-                hs_counter++;
+                HiddenSingle temp_single;
+                temp_single.p_cell = p_board->p_rows[i][index];
+                temp_single.value = c + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hs_counter; l++)
+                    if (singles[l].p_cell == temp_single.p_cell)
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hs_counter++;
+                    singles = realloc(singles, hs_counter * sizeof(HiddenSingle));
+                    singles[hs_counter - 1] = temp_single;
+                }
             }
         }
     }
@@ -60,10 +71,19 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             }
             if (c_count == 1)
             {
-                x_pos[hs_counter] = a;
-                y_pos[hs_counter] = index;
-                val[hs_counter] = d;
-                hs_counter++;
+                HiddenSingle temp_single;
+                temp_single.p_cell = p_board->p_cols[a][index];
+                temp_single.value = d + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hs_counter; l++)
+                    if (singles[l].p_cell == temp_single.p_cell)
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hs_counter++;
+                    singles = realloc(singles, hs_counter * sizeof(HiddenSingle));
+                    singles[hs_counter - 1] = temp_single;
+                }
             }
         }
     }
@@ -82,10 +102,19 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             }
             if (b_count == 1)
             {
-                x_pos[hs_counter] = m;
-                y_pos[hs_counter] = index;
-                val[hs_counter] = q;
-                hs_counter++;
+                HiddenSingle temp_single;
+                temp_single.p_cell = p_board->p_boxes[m][index];
+                temp_single.value = q + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hs_counter; l++)
+                    if (singles[l].p_cell == temp_single.p_cell)
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hs_counter++;
+                    singles = realloc(singles, hs_counter * sizeof(HiddenSingle));
+                    singles[hs_counter - 1] = temp_single;
+                }
             }
         }
     }
@@ -116,19 +145,14 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
         }
     }
 */
-    for (int z = 0; z < hs_counter; z++)
+    int *candidates = malloc(4);
+    for (int i = 0; i < hs_counter; i++)
     {
-        for (int ae = 0; ae < unit_size; ae++)
-        {
-            p_board->p_rows[x_pos[z]][y_pos[z]]->candidates[ae] = 0;
-        }
-        p_board->p_rows[x_pos[z]][y_pos[z]]->candidates[val[z]] = 1;
-        p_board->p_rows[x_pos[z]][y_pos[z]]->num_candidates = 1;
-        p_board->p_rows[x_pos[z]][y_pos[z]]->fixed = true;
+        candidates[0] = singles[i].value;
+        set_candidates(singles[i].p_cell, candidates, 1);
     }
-    free(x_pos);
-    free(y_pos);
-    free(val);
+    free(singles);
+    free(candidates);
     return hs_counter;
 }
 /*
