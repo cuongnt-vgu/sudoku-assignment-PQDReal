@@ -52,7 +52,6 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             int c_count = 0;
             for (int b = 0; b < unit_size; b++)
             {
-                int c_count = 0;
                 if (p_board->p_cols[a][b]->candidates[d] == 1)
                 {
                     index = b;
@@ -72,16 +71,16 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
     {
         for (int q = 0; q < unit_size; q++)
         {
-            int r_count = 0;
+            int b_count = 0;
             for (int n = 0; n < unit_size; n++)
             {
                 if (p_board->p_rows[m][n]->candidates[q] == 1)
                 {
                     index = n;
-                    r_count++;    
+                    b_count++;    
                 }
             }
-            if (r_count == 1)
+            if (b_count == 1)
             {
                 x_pos[hs_counter] = m;
                 y_pos[hs_counter] = index;
