@@ -3,8 +3,6 @@
 #include "sudoku.h"
 #include <string.h>
 
-typedef struct HiddenSingle;
-
 static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size);
 
 // Implement hidden singles logic here
@@ -22,9 +20,6 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
     int hs_counter = 0;
     int index = 0;
     HiddenSingle *singles = malloc(0);
-    int *x_pos = malloc(unit_size*unit_size*sizeof(int));
-    int *y_pos = malloc(unit_size*unit_size*sizeof(int));
-    int *val = malloc(unit_size*unit_size*sizeof(int));
     for (int i = 0; i < unit_size; i++)
     {
         for (int c = 0; c < unit_size; c++)
