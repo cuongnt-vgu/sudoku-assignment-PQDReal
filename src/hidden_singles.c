@@ -19,9 +19,12 @@ int hidden_singles(SudokuBoard *p_board)
 static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
 {
     int hs_counter = 0;
-    int *x_pos = (int*)malloc(unit_size*unit_size*sizeof(int));
-    int *y_pos = (int*)malloc(unit_size*unit_size*sizeof(int));
-    int *val = (int*)malloc(unit_size*unit_size*sizeof(int));
+    static bool found_r = false;
+    static bool found_c = false;
+    static bool found_b = false;
+    int *x_pos = malloc(unit_size*unit_size*sizeof(int));
+    int *y_pos = malloc(unit_size*unit_size*sizeof(int));
+    int *val = malloc(unit_size*unit_size*sizeof(int));
     for (int i = 0; i < unit_size; i++)
     {
         for (int j = 0; j < unit_size; j++)
@@ -30,9 +33,9 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
             {
                 for (int c = 0; c < unit_size; c++)
                 {
-                    bool found_r = false;
-                    bool found_c = false;
-                    bool found_b = false;
+                    found_r = false;
+                    found_c = false;
+                    found_b = false;
                     if (p_board->p_rows[i][j]->candidates[c] == 1)
                     {
                         for (int u = 0; u < unit_size; u++)
@@ -43,75 +46,38 @@ static int find_hidden_singles_in_unit(SudokuBoard *p_board, int unit_size)
                                 {
                                     found_r = true;
                                 }
-                                else if (p_board->p_rows[u][j]->fixed == false && p_board->p_rows[u][i]->candidates[d] == 1 && d == c && u != i)
+                            }
+                        }
+                        for (int v = 0; v < unit_size; v++)
+                        {
+                            for (int e = 0; e < unit_size; e++)
+                            {
+                                if (p_board->p_rows[v][j]->fixed == false && p_board->p_rows[v][j]->candidates[e] == 1 && e == c && i != v)
                                 {
                                     found_c = true;
                                 }
-                                else if (p_board->p_boxes[i][u]->fixed == false && p_board->p_boxes[i][u]->candidates[d] == 1 && d == c && j != u)
+                            }
+                        }
+                        for (int w = (i / 3) * 3; w < (i / 3) * 3 + 3; w++)
+                        {
+                            for (int y = (j / 3) * 3; y < (j / 3) * 3 + 3; y++)
+                            {
+                                for (int f = 0; f < unit_size; f++)
                                 {
-                                    found_b = true;
+                                    if (p_board->p_rows[w][y]->fixed == false && p_board->p_rows[w][y]->candidates[f] == 1 && f == c && i != w && j != y)
+                                    {
+                                        found_b = true;
+                                    }
                                 }
                             }
                         }
-                        if (!found_r || !found_c || found_b)
+                        if (!found_b || !found_c || !found_r)
                         {
                             x_pos[hs_counter] = i;
                             y_pos[hs_counter] = j;
                             val[hs_counter] = c;
                             hs_counter++;
-                            break;
                         }
-                        /*
-                        if (!isHiddenSingle_r)
-                        {
-                            found_c = false;
-                            isHiddenSingle_c = false;
-                            for (int v = 0; v < unit_size; v++)
-                            {
-                                for (int e = 0; e < unit_size; e++)
-                                {
-                                    if (p_board->p_rows[v][j]->fixed == false && p_board->p_rows[v][j]->candidates[e] == 1 && e == c && i != v)
-                                    {
-                                        found_c = true;
-                                    }
-                                }
-                            }
-                            if (!found_c)
-                            {
-                                x_pos[hs_counter] = i;
-                                y_pos[hs_counter] = j;
-                                val[hs_counter] = c;
-                                isHiddenSingle_c = true;
-                                hs_counter++;
-                            }
-                        }
-                        if (!isHiddenSingle_c)
-                        {
-                            found_b = false;
-                            isHiddenSingle_b = false;
-                            for (int w = (i / 3) * 3; w < (i / 3) * 3 + 3; w++)
-                            {
-                                for (int y = (j / 3) * 3; y < (j / 3) * 3 + 3; y++)
-                                {
-                                    for (int f = 0; f < unit_size; f++)
-                                    {
-                                        if (p_board->p_rows[w][y]->fixed == false && p_board->p_rows[w][y]->candidates[f] == 1 && f == c && i != w && j != y)
-                                        {
-                                            found_b = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!found_b)
-                            {
-                                x_pos[hs_counter] = i;
-                                y_pos[hs_counter] = j;
-                                val[hs_counter] = c;
-                                isHiddenSingle_b = true;
-                                hs_counter++;
-                            }
-                        }
-                        */
                     }
                 }
             }
