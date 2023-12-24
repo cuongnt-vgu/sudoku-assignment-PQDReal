@@ -1,75 +1,125 @@
-#include "hidden_pairs.h"
-#include "sudoku.h"
+#include "hidden_singles.h"
+#include <stdlib.h>
 
-// Helper function declarations
-static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size);
-
-// Implement hidden pairs logic here
 int hidden_pairs(SudokuBoard *p_board)
 {
-    int hiddenPairsCounter = 0;
+    int hp_counter = 0;
+    HiddenPair *pairs = malloc(0);
 
-    // Check rows
-    for (int i = 0; i < BOARD_SIZE; i++)
+    // row iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every row
     {
-        find_hidden_pairs_in_unit(p_board->p_rows[i], BOARD_SIZE);
-    }
-
-    // Check columns
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_pairs_in_unit(p_board->p_cols[i], BOARD_SIZE);
-    }
-
-    // Check boxes
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_pairs_in_unit(p_board->p_boxes[i], BOARD_SIZE);
-    }
-
-    return hiddenPairsCounter;
-}
-
-static void find_hidden_pairs_in_unit(Cell **p_cells, int unit_size)
-{
-    // Iterate through each pair of cells
-    for (int i = 0; i < unit_size - 1; i++)
-    {
-        for (int j = i + 1; j < unit_size; j++)
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            // Check if both cells are empty
-            if (p_cells[i]->value == 0 && p_cells[j]->value == 0)
+            int candidate_count = 0; // in that row, how many can be j?
+            int indices[2] = {0, 0}; // indices of hidden pair cells in the row
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
             {
-                // Check if both cells have exactly two candidates
-                if (p_cells[i]->num_candidates == 2 && p_cells[j]->num_candidates == 2 &&
-                    has_same_candidates(p_cells[i]->candidates, p_cells[j]->candidates))
+                if (p_board->p_rows[i][k]->num_candidates == 1) continue;
+                if (p_board->p_rows[i][k]->candidates[j] == 1)
                 {
-                    // Hidden pair found, remove other candidates from the unit
-                    for (int k = 0; k < unit_size; k++)
-                    {
-                        if (k != i && k != j)
-                        {
-                            for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                            {
-                                apply_constraint(&p_cells[k], p_cells[i]->candidates[c]);
-                            }
-                        }
-                    }
+                    if (candidate_count < 2)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 2) // only 2 cells can be j
+            {
+                HiddenPair temp_pair;
+                temp_pair.p_cells[0] = p_board->p_rows[i][indices[0]];
+                temp_pair.p_cells[1] = p_board->p_rows[i][indices[1]];
+                temp_pair.value = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hp_counter; l++)
+                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hp_counter++;
+                    pairs = realloc(pairs, hp_counter * sizeof(HiddenPair));
+                    pairs[hp_counter - 1] = temp_pair;
                 }
             }
         }
     }
-}
 
-// Function to check if two arrays have the same candidates
-int has_same_candidates(const int *arr1, const int *arr2)
-{
-    for (int c = 0; c < BOARD_SIZE; c++)
+    // column iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every column
     {
-        if (arr1[c] != arr2[c])
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            return 0;
+            int candidate_count = 0;
+            int indices[2] = {0, 0};
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the column
+            {
+                if (p_board->p_cols[i][k]->num_candidates == 1) continue;
+                if (p_board->p_cols[i][k]->candidates[j] == 1)
+                {
+                    if (candidate_count < 2)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 2)
+            {
+                HiddenPair temp_pair;
+                temp_pair.p_cells[0] = p_board->p_cols[i][indices[0]];
+                temp_pair.p_cells[1] = p_board->p_cols[i][indices[1]];
+                temp_pair.value = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hp_counter; l++)
+                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hp_counter++;
+                    pairs = realloc(pairs, hp_counter * sizeof(HiddenPair));
+                    pairs[hp_counter - 1] = temp_pair;
+                }
+            }
         }
     }
-    return 1;
+
+    // box iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every box
+    {
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
+        {
+            int candidate_count = 0;
+            int indices[2] = {0, 0};
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the box
+            {
+                if (p_board->p_boxes[i][k]->num_candidates == 1) continue;
+                if (p_board->p_boxes[i][k]->candidates[j] == 1)
+                {
+                    if (candidate_count < 2)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 2)
+            {
+                HiddenPair temp_pair;
+                temp_pair.p_cells[0] = p_board->p_boxes[i][indices[0]];
+                temp_pair.p_cells[1] = p_board->p_boxes[i][indices[1]];
+                temp_pair.value = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < hp_counter; l++)
+                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    hp_counter++;
+                    pairs = realloc(pairs, hp_counter * sizeof(HiddenPair));
+                    pairs[hp_counter - 1] = temp_pair;
+                }
+            }
+        }
+    }
+
+    free(pairs);
+    return hp_counter;
 }
