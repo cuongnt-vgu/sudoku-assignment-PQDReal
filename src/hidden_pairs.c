@@ -1,4 +1,4 @@
-#include "hidden_singles.h"
+#include "hidden_pairs.h"
 #include <stdlib.h>
 
 int hidden_pairs(SudokuBoard *p_board)
