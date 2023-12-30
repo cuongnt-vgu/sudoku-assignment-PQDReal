@@ -159,9 +159,6 @@ int hidden_triples(SudokuBoard *p_board)
             int values[3] = {0};
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the box
             {
-                int row = 3 * (i / 3) + k / 3;
-                int col = 3 * (i % 3) + k % 3;
-
                 if (p_board->p_boxes[i][k]->num_candidates == 1 || p_board->p_boxes[i][k]->candidates[j] == 0)
                     continue;
 
