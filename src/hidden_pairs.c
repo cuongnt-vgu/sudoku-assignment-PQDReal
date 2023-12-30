@@ -150,10 +150,17 @@ int hidden_pairs(SudokuBoard *p_board)
     int *candidates = malloc(4);
     for (int i = 0; i < hs_counter; i++)
     {
+        // Make sure to allocate enough memory for the candidates array
+        int *candidates = malloc(2 * sizeof(int));
+
         candidates[0] = pairs[i].value[0];
         candidates[1] = pairs[i].value[1];
+        
+        // Adjust the following line accordingly to match the actual number of candidates
         set_candidates(pairs[i].p_cells[0], candidates, 2);
-        set_candidates(pairs[i].p_cells[1], candidates, 2);
+
+        // Free the memory allocated for candidates
+        free(candidates);
         //set_candidate(pairs[i].p_cells[1], candidates[1]);
     }
     free(pairs);
