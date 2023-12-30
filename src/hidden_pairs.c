@@ -36,7 +36,7 @@ int hidden_pairs(SudokuBoard *p_board)
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    if (p_board->p_rows[i][index_1]->candidates[l] == 1 && p_board->p_rows[i][index_2]->candidates[l] == 1 & l != value_1)
+                    if (p_board->p_rows[i][index_1]->candidates[l] == 1 && p_board->p_rows[i][index_2]->candidates[l] == 1 && l != value_1)
                     {
                         value_2 = l + 1;
                         candi++;
@@ -110,7 +110,7 @@ int hidden_pairs(SudokuBoard *p_board)
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 & l != value_1)
+                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 && l != value_1)
                     {
                         value_2 = l + 1;
                         candi++;
@@ -184,7 +184,7 @@ int hidden_pairs(SudokuBoard *p_board)
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 & l != value_1)
+                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 && l != value_1)
                     {
                         value_2 = l + 1;
                         candi++;
