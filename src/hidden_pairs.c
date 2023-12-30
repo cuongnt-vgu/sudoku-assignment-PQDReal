@@ -135,8 +135,8 @@ int hidden_pairs(SudokuBoard *p_board)
             if (!c_invalid) // only 1 cell can be j
             {
                 HiddenPair temp_pair;
-                temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
-                temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
+                temp_pair.p_cells[0] = p_board->p_cols[i][index_1];
+                temp_pair.p_cells[1] = p_board->p_cols[i][index_2];
                 temp_pair.value[0] = value_1;
                 temp_pair.value[1] = value_2;
                 int already_checked = 0;
@@ -184,7 +184,7 @@ int hidden_pairs(SudokuBoard *p_board)
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 && l != value_1)
+                    if (p_board->p_boxes[i][index_1]->candidates[l] == 1 && p_board->p_boxes[i][index_2]->candidates[l] == 1 && l != value_1)
                     {
                         value_2 = l + 1;
                         candi++;
@@ -195,7 +195,7 @@ int hidden_pairs(SudokuBoard *p_board)
                     int avail = 0;
                     for (int m = 0; m < BOARD_SIZE; m++)
                     {
-                        if ((p_board->p_cols[i][m]->candidates[value_2] == 1) && (m != index_1 && m != index_2))
+                        if ((p_board->p_boxes[i][m]->candidates[value_2] == 1) && (m != index_1 && m != index_2))
                         {
                             avail++;
                         }
@@ -209,8 +209,8 @@ int hidden_pairs(SudokuBoard *p_board)
             if (!b_invalid) // only 1 cell can be j
             {
                 HiddenPair temp_pair;
-                temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
-                temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
+                temp_pair.p_cells[0] = p_board->p_boxes[i][index_1];
+                temp_pair.p_cells[1] = p_board->p_boxes[i][index_2];
                 temp_pair.value[0] = value_1;
                 temp_pair.value[1] = value_2;
                 int already_checked = 0;
