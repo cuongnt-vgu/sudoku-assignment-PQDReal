@@ -16,6 +16,7 @@ int hidden_pairs(SudokuBoard *p_board)
             int index_2 = 0;
             int value_1 = 0; // index of hidden single cell in the row
             int value_2 = 0;
+            bool r_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
             {
                 if (p_board->p_rows[i][k]->num_candidates == 1) continue;
@@ -25,7 +26,6 @@ int hidden_pairs(SudokuBoard *p_board)
                     if (index_1)
                     {
                         index_2 = k;
-                        value_2 = j + 1;
                     }
                     index_1 = k;
                     value_1 = j + 1;
@@ -33,21 +33,48 @@ int hidden_pairs(SudokuBoard *p_board)
             }
             if (candidate_count == 2) // only 1 cell can be j
             {
-                HiddenPair temp_pair;
-                temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
-                temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
-                int already_checked = 0;
-                for (int l = 0; l < hs_counter; l++)
-                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
-                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
-                        already_checked = 1;
-                if (!already_checked)
+                int candi = 0;
+                for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    hs_counter++;
-                    pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
-                    pairs[hs_counter - 1] = temp_pair;
+                    if (p_board->p_rows[i][index_1]->candidates[l] == 1 && p_board->p_rows[i][index_2]->candidates[l] == 1 & l != value_1)
+                    {
+                        value_2 = l + 1;
+                        candi++;
+                    }
+                }
+                if (candi == 1)
+                {
+                    int avail = 0;
+                    for (int m = 0; m < BOARD_SIZE; m++)
+                    {
+                        if ((p_board->p_rows[i][m]->candidates[value_2] == 1) && (m != index_1 && m != index_2))
+                        {
+                            avail++;
+                        }
+                    }
+                    if (avail == 0)
+                    {
+                        r_invalid = false;
+                    }
+                }
+                if (!r_invalid) // only 1 cell can be j
+                {
+                    HiddenPair temp_pair;
+                    temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
+                    temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
+                    temp_pair.value[0] = value_1;
+                    temp_pair.value[1] = value_2;
+                    int already_checked = 0;
+                    for (int l = 0; l < hs_counter; l++)
+                        if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                            (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                            already_checked = 1;
+                    if (!already_checked)
+                    {
+                        hs_counter++;
+                        pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
+                        pairs[hs_counter - 1] = temp_pair;
+                    }
                 }
             }
         }
@@ -63,16 +90,16 @@ int hidden_pairs(SudokuBoard *p_board)
             int index_2 = 0;
             int value_1 = 0; // index of hidden single cell in the row
             int value_2 = 0;
+            bool c_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
             {
-                if (p_board->p_rows[i][k]->num_candidates == 1) continue;
-                if (p_board->p_rows[i][k]->candidates[j] == 1)
+                if (p_board->p_cols[i][k]->num_candidates == 1) continue;
+                if (p_board->p_cols[i][k]->candidates[j] == 1)
                 {
                     candidate_count++;
                     if (index_1)
                     {
                         index_2 = k;
-                        value_2 = j + 1;
                     }
                     index_1 = k;
                     value_1 = j + 1;
@@ -80,21 +107,48 @@ int hidden_pairs(SudokuBoard *p_board)
             }
             if (candidate_count == 2) // only 1 cell can be j
             {
-                HiddenPair temp_pair;
-                temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
-                temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
-                int already_checked = 0;
-                for (int l = 0; l < hs_counter; l++)
-                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
-                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
-                        already_checked = 1;
-                if (!already_checked)
+                int candi = 0;
+                for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    hs_counter++;
-                    pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
-                    pairs[hs_counter - 1] = temp_pair;
+                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 & l != value_1)
+                    {
+                        value_2 = l + 1;
+                        candi++;
+                    }
+                }
+                if (candi == 1)
+                {
+                    int avail = 0;
+                    for (int m = 0; m < BOARD_SIZE; m++)
+                    {
+                        if ((p_board->p_cols[i][m]->candidates[value_2] == 1) && (m != index_1 && m != index_2))
+                        {
+                            avail++;
+                        }
+                    }
+                    if (avail == 0)
+                    {
+                        c_invalid = false;
+                    }
+                }
+                if (!c_invalid) // only 1 cell can be j
+                {
+                    HiddenPair temp_pair;
+                    temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
+                    temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
+                    temp_pair.value[0] = value_1;
+                    temp_pair.value[1] = value_2;
+                    int already_checked = 0;
+                    for (int l = 0; l < hs_counter; l++)
+                        if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                            (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                            already_checked = 1;
+                    if (!already_checked)
+                    {
+                        hs_counter++;
+                        pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
+                        pairs[hs_counter - 1] = temp_pair;
+                    }
                 }
             }
         }
@@ -110,16 +164,16 @@ int hidden_pairs(SudokuBoard *p_board)
             int index_2 = 0;
             int value_1 = 0; // index of hidden single cell in the row
             int value_2 = 0;
+            bool b_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
             {
-                if (p_board->p_rows[i][k]->num_candidates == 1) continue;
-                if (p_board->p_rows[i][k]->candidates[j] == 1)
+                if (p_board->p_cols[i][k]->num_candidates == 1) continue;
+                if (p_board->p_cols[i][k]->candidates[j] == 1)
                 {
                     candidate_count++;
                     if (index_1)
                     {
                         index_2 = k;
-                        value_2 = j + 1;
                     }
                     index_1 = k;
                     value_1 = j + 1;
@@ -127,21 +181,48 @@ int hidden_pairs(SudokuBoard *p_board)
             }
             if (candidate_count == 2) // only 1 cell can be j
             {
-                HiddenPair temp_pair;
-                temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
-                temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
-                int already_checked = 0;
-                for (int l = 0; l < hs_counter; l++)
-                    if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
-                        (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
-                        already_checked = 1;
-                if (!already_checked)
+                int candi = 0;
+                for (int l = 0; l < BOARD_SIZE; l++)
                 {
-                    hs_counter++;
-                    pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
-                    pairs[hs_counter - 1] = temp_pair;
+                    if (p_board->p_cols[i][index_1]->candidates[l] == 1 && p_board->p_cols[i][index_2]->candidates[l] == 1 & l != value_1)
+                    {
+                        value_2 = l + 1;
+                        candi++;
+                    }
+                }
+                if (candi == 1)
+                {
+                    int avail = 0;
+                    for (int m = 0; m < BOARD_SIZE; m++)
+                    {
+                        if ((p_board->p_cols[i][m]->candidates[value_2] == 1) && (m != index_1 && m != index_2))
+                        {
+                            avail++;
+                        }
+                    }
+                    if (avail == 0)
+                    {
+                        b_invalid = false;
+                    }
+                }
+                if (!b_invalid) // only 1 cell can be j
+                {
+                    HiddenPair temp_pair;
+                    temp_pair.p_cells[0] = p_board->p_rows[i][index_1];
+                    temp_pair.p_cells[1] = p_board->p_rows[i][index_2];
+                    temp_pair.value[0] = value_1;
+                    temp_pair.value[1] = value_2;
+                    int already_checked = 0;
+                    for (int l = 0; l < hs_counter; l++)
+                        if ((pairs[l].p_cells[0] == temp_pair.p_cells[0] && pairs[l].p_cells[1] == temp_pair.p_cells[1]) ||
+                            (pairs[l].p_cells[0] == temp_pair.p_cells[1] && pairs[l].p_cells[1] == temp_pair.p_cells[0]))
+                            already_checked = 1;
+                    if (!already_checked)
+                    {
+                        hs_counter++;
+                        pairs = realloc(pairs, hs_counter * sizeof(HiddenPair));
+                        pairs[hs_counter - 1] = temp_pair;
+                    }
                 }
             }
         }
@@ -161,7 +242,6 @@ int hidden_pairs(SudokuBoard *p_board)
 
         // Free the memory allocated for candidates
         free(candidates);
-        //set_candidate(pairs[i].p_cells[1], candidates[1]);
     }
     free(pairs);
     return hs_counter; // returns total cells solved by hidden singles
