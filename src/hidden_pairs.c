@@ -1,7 +1,7 @@
 #include "hidden_pairs.h"
 #include <stdlib.h>
 
-int hidden_singles(SudokuBoard *p_board)
+int hidden_pairs(SudokuBoard *p_board)
 {
     int hs_counter = 0;
     HiddenPair *pairs = malloc(0);
