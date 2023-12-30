@@ -248,7 +248,7 @@ int hidden_pairs(SudokuBoard *p_board)
         
         // Call set_candidates on each cell in the pair with both candidates
         set_candidates(pairs[i].p_cell_1, candidates, 2);
-        set_candidates(pairs[i].p_cell_1, candidates, 2);
+        set_candidates(pairs[i].p_cell_2, candidates, 2);
 
         // Free the memory allocated for candidates
         free(candidates);
