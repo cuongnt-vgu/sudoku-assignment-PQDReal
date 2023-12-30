@@ -164,7 +164,6 @@ int hidden_pairs(SudokuBoard *p_board)
         //set_candidate(pairs[i].p_cells[1], candidates[1]);
     }
     free(pairs);
-    free(candidates);
     return hs_counter; // returns total cells solved by hidden singles
 }
 
