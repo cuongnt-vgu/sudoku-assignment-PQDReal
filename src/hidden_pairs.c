@@ -147,7 +147,7 @@ int hidden_pairs(SudokuBoard *p_board)
         }
     }
 
-    int *candidates = malloc(4);
+    //int *candidates = malloc(4);
     for (int i = 0; i < hs_counter; i++)
     {
         // Make sure to allocate enough memory for the candidates array
