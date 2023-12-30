@@ -1,110 +1,137 @@
-#include "hidden_triples.h"
-#include "sudoku.h"
+#include "hidden_singles.h"
+#include <stdlib.h>
 
-#include <string.h>
+typedef struct {
+    SudokuCell *p_cells[3];
+    int values[3];
+} HiddenTriple;
 
-static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size);
-
-int hiddenTriplesCounter;
-
-// Implement hidden triples logic here
 int hidden_triples(SudokuBoard *p_board)
 {
-    hiddenTriplesCounter = 0;
+    int ht_counter = 0;
+    HiddenTriple *triples = malloc(0);
 
-    // Check rows
-    for (int i = 0; i < BOARD_SIZE; i++)
+    // row iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every row
     {
-        find_hidden_triples_in_unit(p_board->p_rows[i], BOARD_SIZE);
-    }
-
-    // Check columns
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_triples_in_unit(p_board->p_cols[i], BOARD_SIZE);
-    }
-
-    // Check boxes
-    for (int i = 0; i < BOARD_SIZE; i++)
-    {
-        find_hidden_triples_in_unit(p_board->p_boxes[i], BOARD_SIZE);
-    }
-
-    return hiddenTriplesCounter;
-}
-
-
-static void find_hidden_triples_in_unit(Cell **p_cells, int unit_size)
-{
-
-    // Iterate through each triple of cells
-    for (int i = 0; i < unit_size - 2; i++)
-    {
-        for (int j = i + 1; j < unit_size - 1; j++)
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            for (int k = j + 1; k < unit_size; k++)
+            int candidate_count = 0; // in that row, how many can be j?
+            int indices[3] = {0, 0, 0}; // indices of hidden triple cells in the row
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
             {
-                // Check if all three cells have 2 or 3 candidates
-                if ((p_cells[i]->num_candidates == 2 || p_cells[i]->num_candidates == 3) &&
-                    (p_cells[j]->num_candidates == 2 || p_cells[j]->num_candidates == 3) &&
-                    (p_cells[k]->num_candidates == 2 || p_cells[k]->num_candidates == 3))
+                if (p_board->p_rows[i][k]->num_candidates == 1) continue;
+                if (p_board->p_rows[i][k]->candidates[j] == 1)
                 {
-                    // Combine candidates from the three cells
-                    int combinedCandidates[BOARD_SIZE] = {0};
-
-                    for (int c = 0; c < p_cells[i]->num_candidates; c++)
-                    {
-                        int candidateValue = p_cells[i]->candidates[c] - 1;
-                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
-                            combinedCandidates[candidateValue] = 1;
-                        }
-                    }
-
-                    for (int c = 0; c < p_cells[j]->num_candidates; c++)
-                    {
-                        int candidateValue = p_cells[j]->candidates[c] - 1;
-                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
-                            combinedCandidates[candidateValue] = 1;
-                        }
-                    }
-
-                    for (int c = 0; c < p_cells[k]->num_candidates; c++)
-                    {
-                        int candidateValue = p_cells[k]->candidates[c] - 1;
-                        if (candidateValue >= 0 && candidateValue < BOARD_SIZE) {
-                            combinedCandidates[candidateValue] = 1;
-                        }
-                    }
-
-                    // Check if there are exactly 3 candidates in the combined set
-                    int count = 0;
-                    int uniqueCandidates[3] = {0};
-
-                    for (int c = 0; c < BOARD_SIZE && count < 3; c++)
-                    {
-                        if (combinedCandidates[c])
-                        {
-                            uniqueCandidates[count++] = c + 1;
-                        }
-                    }
-
-                    if (count == 3)
-                    {
-                        for (int m = 0; m < unit_size; m++)
-                        {
-                            if (m != i && m != j && m != k)
-                            {
-                                for (int c = 0; c < 3; c++)
-                                {
-                                    apply_constraint(&p_cells[m], uniqueCandidates[c]);
-                                }
-                            }
-                        }
-                        // Hidden triple found, remove other candidates from the unit
-                        hiddenTriplesCounter++;
-                    }
+                    if (candidate_count < 3)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 3) // only 3 cells can be j
+            {
+                HiddenTriple temp_triple;
+                temp_triple.p_cells[0] = p_board->p_rows[i][indices[0]];
+                temp_triple.p_cells[1] = p_board->p_rows[i][indices[1]];
+                temp_triple.p_cells[2] = p_board->p_rows[i][indices[2]];
+                temp_triple.values[0] = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < ht_counter; l++)
+                    if ((triples[l].p_cells[0] == temp_triple.p_cells[0] && triples[l].p_cells[1] == temp_triple.p_cells[1] && triples[l].p_cells[2] == temp_triple.p_cells[2]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[1] && triples[l].p_cells[1] == temp_triple.p_cells[2] && triples[l].p_cells[2] == temp_triple.p_cells[0]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[2] && triples[l].p_cells[1] == temp_triple.p_cells[0] && triples[l].p_cells[2] == temp_triple.p_cells[1]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    ht_counter++;
+                    triples = realloc(triples, ht_counter * sizeof(HiddenTriple));
+                    triples[ht_counter - 1] = temp_triple;
                 }
             }
         }
     }
+
+    // column iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every column
+    {
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
+        {
+            int candidate_count = 0;
+            int indices[3] = {0, 0, 0};
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the column
+            {
+                if (p_board->p_cols[i][k]->num_candidates == 1) continue;
+                if (p_board->p_cols[i][k]->candidates[j] == 1)
+                {
+                    if (candidate_count < 3)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 3)
+            {
+                HiddenTriple temp_triple;
+                temp_triple.p_cells[0] = p_board->p_cols[i][indices[0]];
+                temp_triple.p_cells[1] = p_board->p_cols[i][indices[1]];
+                temp_triple.p_cells[2] = p_board->p_cols[i][indices[2]];
+                temp_triple.values[0] = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < ht_counter; l++)
+                    if ((triples[l].p_cells[0] == temp_triple.p_cells[0] && triples[l].p_cells[1] == temp_triple.p_cells[1] && triples[l].p_cells[2] == temp_triple.p_cells[2]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[1] && triples[l].p_cells[1] == temp_triple.p_cells[2] && triples[l].p_cells[2] == temp_triple.p_cells[0]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[2] && triples[l].p_cells[1] == temp_triple.p_cells[0] && triples[l].p_cells[2] == temp_triple.p_cells[1]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    ht_counter++;
+                    triples = realloc(triples, ht_counter * sizeof(HiddenTriple));
+                    triples[ht_counter - 1] = temp_triple;
+                }
+            }
+        }
+    }
+
+    // box iteration
+    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every box
+    {
+        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
+        {
+            int candidate_count = 0;
+            int indices[3] = {0, 0, 0};
+            for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the box
+            {
+                if (p_board->p_boxes[i][k]->num_candidates == 1) continue;
+                if (p_board->p_boxes[i][k]->candidates[j] == 1)
+                {
+                    if (candidate_count < 3)
+                        indices[candidate_count] = k;
+                    candidate_count++;
+                }
+            }
+            if (candidate_count == 3)
+            {
+                HiddenTriple temp_triple;
+                temp_triple.p_cells[0] = p_board->p_boxes[i][indices[0]];
+                temp_triple.p_cells[1] = p_board->p_boxes[i][indices[1]];
+                temp_triple.p_cells[2] = p_board->p_boxes[i][indices[2]];
+                temp_triple.values[0] = j + 1;
+                int already_checked = 0;
+                for (int l = 0; l < ht_counter; l++)
+                    if ((triples[l].p_cells[0] == temp_triple.p_cells[0] && triples[l].p_cells[1] == temp_triple.p_cells[1] && triples[l].p_cells[2] == temp_triple.p_cells[2]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[1] && triples[l].p_cells[1] == temp_triple.p_cells[2] && triples[l].p_cells[2] == temp_triple.p_cells[0]) ||
+                        (triples[l].p_cells[0] == temp_triple.p_cells[2] && triples[l].p_cells[1] == temp_triple.p_cells[0] && triples[l].p_cells[2] == temp_triple.p_cells[1]))
+                        already_checked = 1;
+                if (!already_checked)
+                {
+                    ht_counter++;
+                    triples = realloc(triples, ht_counter * sizeof(HiddenTriple));
+                    triples[ht_counter - 1] = temp_triple;
+                }
+            }
+        }
+    }
+
+    free(triples);
+    return ht_counter;
 }
+
