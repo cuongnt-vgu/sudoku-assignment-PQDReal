@@ -27,7 +27,10 @@ int hidden_pairs(SudokuBoard *p_board)
                     {
                         index_2 = k;
                     }
-                    index_1 = k;
+                    else
+                    {
+                        index_1 = k;
+                    }
                     value_1 = j + 1;
                 }
             }
@@ -101,7 +104,10 @@ int hidden_pairs(SudokuBoard *p_board)
                     {
                         index_2 = k;
                     }
-                    index_1 = k;
+                    else
+                    {
+                        index_1 = k;
+                    }
                     value_1 = j + 1;
                 }
             }
@@ -175,7 +181,10 @@ int hidden_pairs(SudokuBoard *p_board)
                     {
                         index_2 = k;
                     }
-                    index_1 = k;
+                    else
+                    {
+                        index_1 = k;
+                    }
                     value_1 = j + 1;
                 }
             }
@@ -246,6 +255,8 @@ int hidden_pairs(SudokuBoard *p_board)
     free(pairs);
     return hs_counter; // returns total cells solved by hidden singles
 }
+
+
 
 
 
