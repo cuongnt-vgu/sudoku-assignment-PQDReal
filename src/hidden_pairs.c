@@ -152,8 +152,8 @@ int hidden_singles(SudokuBoard *p_board)
     {
         candidates[0] = pairs[i].value[0];
         candidates[1] = pairs[i].value[1];
-        set_candidates(pairs[i].p_cells[0], candidates[0], 1);
-        set_candidate(pairs[i].p_cells[1], candidates[1]);
+        set_candidates(pairs[i].p_cells[0], candidates, 2);
+        //set_candidate(pairs[i].p_cells[1], candidates[1]);
     }
     free(pairs);
     free(candidates);
