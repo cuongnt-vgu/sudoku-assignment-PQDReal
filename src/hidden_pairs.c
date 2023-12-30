@@ -66,8 +66,8 @@ int hidden_pairs(SudokuBoard *p_board)
                 HiddenPair temp_pair;
                 temp_pair.p_cell_1 = p_board->p_rows[i][index_1];
                 temp_pair.p_cell_2 = p_board->p_rows[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
+                temp_pair.value1 = value_1;
+                temp_pair.value2 = value_2;
                 int already_checked = 0;
                 for (int l = 0; l < hs_counter; l++)
                     if ((pairs[l].p_cell_1 == temp_pair.p_cell_1 && pairs[l].p_cell_2 == temp_pair.p_cell_2) ||
@@ -143,8 +143,8 @@ int hidden_pairs(SudokuBoard *p_board)
                 HiddenPair temp_pair;
                 temp_pair.p_cell_1 = p_board->p_cols[i][index_1];
                 temp_pair.p_cell_2 = p_board->p_cols[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
+                temp_pair.value1 = value_1;
+                temp_pair.value2 = value_2;
                 int already_checked = 0;
                 for (int l = 0; l < hs_counter; l++)
                     if ((pairs[l].p_cell_1 == temp_pair.p_cell_1 && pairs[l].p_cell_2 == temp_pair.p_cell_2) ||
@@ -220,8 +220,8 @@ int hidden_pairs(SudokuBoard *p_board)
                 HiddenPair temp_pair;
                 temp_pair.p_cell_1 = p_board->p_boxes[i][index_1];
                 temp_pair.p_cell_2 = p_board->p_boxes[i][index_2];
-                temp_pair.value[0] = value_1;
-                temp_pair.value[1] = value_2;
+                temp_pair.value1 = value_1;
+                temp_pair.value2 = value_2;
                 int already_checked = 0;
                 for (int l = 0; l < hs_counter; l++)
                     if ((pairs[l].p_cell_1 == temp_pair.p_cell_1 && pairs[l].p_cell_2 == temp_pair.p_cell_2) ||
@@ -243,8 +243,8 @@ int hidden_pairs(SudokuBoard *p_board)
         // Make sure to allocate enough memory for the candidates array
         int *candidates = malloc(2 * sizeof(int));
 
-        candidates[0] = pairs[i].value[0];
-        candidates[1] = pairs[i].value[1];
+        candidates[0] = pairs[i].value1;
+        candidates[1] = pairs[i].value2;
         
         // Call set_candidates on each cell in the pair with both candidates
         set_candidates(pairs[i].p_cell_1, candidates, 2);
