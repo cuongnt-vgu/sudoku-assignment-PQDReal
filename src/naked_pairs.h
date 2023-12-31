@@ -2,11 +2,15 @@
 
 #include "sudoku.h"
 
-// Declare functions related to naked pairs
-int naked_pairs(SudokuBoard *p_board);
+typedef struct NakedPairs_impl
+{
+    Cell **p_cells;
+    int index;
+} NakedPairs;
 
-typedef struct {
-    Cell *p_cells[2];
-    int values[2];
-} NakedPair;
+
+int check_hidden_single_values(Cell **p_cells, int i, int j);
+void find_naked_pairs(Cell **p_cells, NakedPairs *p_naked_pairs, 
+                    int *p_np_np_nt_counter, int is_box);
+int naked_pairs(SudokuBoard *p_board);
 
