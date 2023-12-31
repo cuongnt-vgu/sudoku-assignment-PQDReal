@@ -9,7 +9,7 @@ typedef struct {
 } HiddenSingle;
 
 // Declare functions related to hidden singles
-int hidden_singles(SudokuBoard *p_board, HiddenSingle *p_hidden_single);
+int hidden_singles(SudokuBoard *p_board);
 
 
 
