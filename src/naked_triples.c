@@ -1,201 +1,129 @@
 #include "naked_triples.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+int is_in_triples(int triples[3], int value)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (triples[i] == value) return 1;
+    }
+    return 0;
+}
+
+int check_cell_in_triples(int triples[3], Cell* p_cell)
+{
+    int* candidates = get_candidates(p_cell);
+    for (int i = 0; i < p_cell->num_candidates; i++)
+    {
+        if (!is_in_triples(triples, candidates[i]))
+        {
+            free(candidates);
+            return 0;
+        }
+    }
+    free(candidates);
+    return 1;
+}
+
+int check_naked_triples(Cell **p_cells, int possible_triples[], int *indices)
+{
+    int cell_nt_counter = 0;
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        if (p_cells[i]->num_candidates == 1 || p_cells[i]->num_candidates > 3) continue;
+        else if (check_cell_in_triples(possible_triples, p_cells[i])) indices[cell_nt_counter++] = i;
+    }
+    if (cell_nt_counter == 3) return 1;
+    return 0;
+}
+
+void find_naked_triples(Cell **p_cells, NakedTriples *p_naked_triples, int *p_nt_counter, int unit)
+{
+    int cand_nt_counter[BOARD_SIZE];
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        cand_nt_counter[i] = 0;
+    }
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        int* candidates = get_candidates(p_cells[i]);
+        for (int j = 0; j < p_cells[i]->num_candidates; j++)
+        {
+            cand_nt_counter[candidates[j]-1] += 1;
+        }
+        free(candidates);
+    }
+
+    int possible_triples[BOARD_SIZE];
+    int possible_triples_num_c = 0;
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        if (cand_nt_counter[i] >= 2)
+        {
+            possible_triples[possible_triples_num_c++] = i+1;
+        }
+    }
+
+    if (possible_triples_num_c < 3) return;
+
+    for (int i = 0; i < possible_triples_num_c - 2; i++)
+    {
+        for (int j = i+1; j < possible_triples_num_c - 1; j++)
+        {
+            for (int k = j+1; k < possible_triples_num_c; k++)
+            {
+                int values[3] = {possible_triples[i], possible_triples[j], possible_triples[k]};
+                int indices[BOARD_SIZE];
+                if (check_naked_triples(p_cells, values, indices))
+                {
+                    if (unit == 1)
+                    {
+                        if ((indices[0] == 0 || indices[0] == 3 || indices[0] == 6) && indices[1] == indices[0]+1 && indices[2] == indices[0]+2) continue;
+                        else if ((indices[0] >= 0 && indices[0] <= 2) && indices[1] == indices[0]+3 && indices[2] == indices[0]+6) continue;
+                    }
+                    p_naked_triples[(*p_nt_counter)++] = (NakedTriples){p_cells, {indices[0], indices[1], indices[2]}, {possible_triples[i], possible_triples[j], possible_triples[k]}};
+                }
+            }
+        }
+    }
+}
 
 int naked_triples(SudokuBoard *p_board)
 {
     int nt_counter = 0;
-    NakedTriple *triples = malloc(0);
 
-    // row iteration
-    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every row
+    NakedTriples p_naked_triples[BOARD_SIZE * BOARD_SIZE];
+
+    for (int i = 0; i < BOARD_SIZE; i++)
     {
-        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every cell in the row
-        {
-            if (p_board->p_rows[i][j]->num_candidates != 3) continue;
-            for (int k = 0; k < BOARD_SIZE; k++)
-            {
-                if (p_board->p_rows[i][k]->num_candidates != 2 || p_board->p_rows[i][k]->num_candidates != 3 || j == k) continue;
-                for (int l = 0; l < BOARD_SIZE; l++)
-                {
-                    if (p_board->p_rows[i][l]->num_candidates != 2 || p_board->p_rows[i][l]->num_candidates != 3 || l == k || l == j) continue;
-                    // check if cells j, k, and l have the same three candidates
-                    int match = 1;
-                    for (int m = 0; m < BOARD_SIZE; m++)
-                    {
-                        if ((p_board->p_rows[i][j]->candidates[m] != p_board->p_rows[i][k]->candidates[m])||
-                            (p_board->p_rows[i][j]->candidates[m] != p_board->p_rows[i][l]->candidates[m]))
-                        {
-                            match = 0;
-                            break;
-                        }
-                    }
-                    if (match) // cells j, k, and l form a naked triple
-                    {
-                        NakedTriple temp_triple;
-                        temp_triple.p_cells[0] = p_board->p_rows[i][j];
-                        temp_triple.p_cells[1] = p_board->p_rows[i][k];
-                        temp_triple.p_cells[2] = p_board->p_rows[i][l];
-                        int v = 0;
-                        for (int m = 0; m < BOARD_SIZE; m++)
-                        {
-                            if (p_board->p_rows[i][j]->candidates[m] == 1)
-                            {
-                                temp_triple.values[v] = m + 1;
-                                v++;
-                            }
-                        }
-                        nt_counter++;
-                        triples = realloc(triples, nt_counter * sizeof(NakedTriple));
-                        triples[nt_counter - 1] = temp_triple;
-                    }
-                }
-            }
-        }
+        find_naked_triples(p_board->p_rows[i], p_naked_triples, &nt_counter, 0);
+        find_naked_triples(p_board->p_cols[i], p_naked_triples, &nt_counter, 0);
+        find_naked_triples(p_board->p_boxes[i], p_naked_triples, &nt_counter, 1);
     }
-
-    // column iteration
-    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every column
-    {
-        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every cell in the column
-        {
-            if (p_board->p_cols[i][j]->num_candidates != 3) continue;
-            for (int k = 0; k < BOARD_SIZE; k++)
-            {
-                if (p_board->p_cols[i][k]->num_candidates != 2 || p_board->p_cols[i][k]->num_candidates != 3 || j == k) continue;
-                for (int l = 0; l < BOARD_SIZE; l++)
-                {
-                    if (p_board->p_cols[i][l]->num_candidates != 2 || p_board->p_cols[i][l]->num_candidates != 3 || l == k || l == j) continue;
-                    // check if cells j, k, and l have the same three candidates
-                    int match = 1;
-                    for (int m = 0; m < BOARD_SIZE; m++)
-                    {
-                        if (p_board->p_cols[i][j]->candidates[m] != p_board->p_cols[i][k]->candidates[m] ||
-                            p_board->p_cols[i][j]->candidates[m] != p_board->p_cols[i][l]->candidates[m])
-                        {
-                            match = 0;
-                            break;
-                        }
-                    }
-                    if (match) // cells j, k, and l form a naked triple
-                    {
-                        NakedTriple temp_triple;
-                        temp_triple.p_cells[0] = p_board->p_cols[i][j];
-                        temp_triple.p_cells[1] = p_board->p_cols[i][k];
-                        temp_triple.p_cells[2] = p_board->p_cols[i][l];
-                        int v = 0;
-                        for (int m = 0; m < BOARD_SIZE; m++)
-                        {
-                            if (p_board->p_cols[i][j]->candidates[m] == 1)
-                            {
-                                temp_triple.values[v] = m + 1;
-                                v++;
-                            }
-                        }
-                        nt_counter++;
-                        triples = realloc(triples, nt_counter * sizeof(NakedTriple));
-                        triples[nt_counter - 1] = temp_triple;
-                    }
-                }
-            }
-        }
-    }
-
-    // box iteration
-    for (int i = 0; i < BOARD_SIZE; i++) // iterate over every box
-    {
-        for (int j = 0; j < BOARD_SIZE; j++) // iterate over every cell in the box
-        {
-            if (p_board->p_boxes[i][j]->num_candidates != 3) continue;
-            for (int k = 0; k < BOARD_SIZE; k++)
-            {
-                if (p_board->p_boxes[i][k]->num_candidates != 2 || p_board->p_boxes[i][k]->num_candidates != 3 || j == k) continue;
-                for (int l = 0; l < BOARD_SIZE; l++)
-                {
-                    if (p_board->p_boxes[i][l]->num_candidates != 2 || p_board->p_boxes[i][l]->num_candidates != 3 || l == k || l == j) continue;
-                    // check if cells j, k, and l have the same three candidates
-                    int match = 1;
-                    for (int m = 0; m < BOARD_SIZE; m++)
-                    {
-                        if (p_board->p_boxes[i][j]->candidates[m] != p_board->p_boxes[i][k]->candidates[m] ||
-                            p_board->p_boxes[i][j]->candidates[m] != p_board->p_boxes[i][l]->candidates[m])
-                        {
-                            match = 0;
-                            break;
-                        }
-                    }
-                    if (match) // cells j, k, and l form a naked triple
-                    {
-                        NakedTriple temp_triple;
-                        temp_triple.p_cells[0] = p_board->p_boxes[i][j];
-                        temp_triple.p_cells[1] = p_board->p_boxes[i][k];
-                        temp_triple.p_cells[2] = p_board->p_boxes[i][l];
-                        int v = 0;
-                        for (int m = 0; m < BOARD_SIZE; m++)
-                        {
-                            if (p_board->p_boxes[i][j]->candidates[m] == 1)
-                            {
-                                temp_triple.values[v] = m + 1;
-                                v++;
-                            }
-                        }
-                        nt_counter++;
-                        triples = realloc(triples, nt_counter * sizeof(NakedTriple));
-                        triples[nt_counter - 1] = temp_triple;
-                    }
-                }
-            }
-        }
-    }
-
-    // remove the naked triple values from other cells in the same row, column, or box
     for (int i = 0; i < nt_counter; i++)
     {
-        // find the row, column, and box that contain the naked triple
-        int row = triples[i].p_cells[0]->row_index;
-        int col = triples[i].p_cells[0]->col_index;
-        int box = triples[i].p_cells[0]->box_index;
-
-        // remove the naked triple values from other cells in the same row
+        Cell** p_cells = p_naked_triples[i].p_cells;
+        int triples_values[3];
+        for (int j = 0; j < 3; j++)
+        {
+            triples_values[j] = p_naked_triples[i].values[j];
+        }
         for (int j = 0; j < BOARD_SIZE; j++)
         {
-            if (p_board->p_rows[row][j] != triples[i].p_cells[0] && 
-                p_board->p_rows[row][j] != triples[i].p_cells[1] &&
-                p_board->p_rows[row][j] != triples[i].p_cells[2])
+            if (!check_cell_in_triples(triples_values, p_cells[j]))
             {
-                p_board->p_rows[row][j]->candidates[triples[i].values[0] - 1] = 0;
-                p_board->p_rows[row][j]->candidates[triples[i].values[1] - 1] = 0;
-                p_board->p_rows[row][j]->candidates[triples[i].values[2] - 1] = 0;
+                for (int k = 0; k < 3; k++)
+                {
+                    if (is_candidate(p_cells[j], triples_values[k]))
+                    {
+                        unset_candidate(p_cells[j], triples_values[k]);
+                    }
+                }
             }
         }
 
-        // remove the naked triple values from other cells in the same column
-        for (int j = 0; j < BOARD_SIZE; j++)
-        {
-            if (p_board->p_cols[col][j] != triples[i].p_cells[0] && 
-                p_board->p_cols[col][j] != triples[i].p_cells[1] &&
-                p_board->p_cols[col][j] != triples[i].p_cells[2])
-            {
-                p_board->p_cols[col][j]->candidates[triples[i].values[0] - 1] = 0;
-                p_board->p_cols[col][j]->candidates[triples[i].values[1] - 1] = 0;
-                p_board->p_cols[col][j]->candidates[triples[i].values[2] - 1] = 0;
-            }
-        }
-
-        // remove the naked triple values from other cells in the same box
-        for (int j = 0; j < BOARD_SIZE; j++)
-        {
-            if (p_board->p_boxes[box][j] != triples[i].p_cells[0] && 
-                p_board->p_boxes[box][j] != triples[i].p_cells[1] &&
-                p_board->p_boxes[box][j] != triples[i].p_cells[2])
-            {
-                p_board->p_boxes[box][j]->candidates[triples[i].values[0] - 1] = 0;
-                p_board->p_boxes[col][j]->candidates[triples[i].values[1] - 1] = 0;
-                p_board->p_boxes[col][j]->candidates[triples[i].values[2] - 1] = 0;
-            }
-        }
     }
-
-    free(triples);
     return nt_counter;
 }
 
