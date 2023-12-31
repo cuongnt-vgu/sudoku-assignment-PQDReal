@@ -2,11 +2,15 @@
 
 #include "sudoku.h"
 
-// Declare functions related to hidden singles
-int hidden_triples(SudokuBoard *p_board);
+typedef struct HiddenTriples_impl
+{
+    Cell **p_cells;
+    int indices[3];
+    int values[3];
+} HiddenTriples;
 
-typedef struct {
-    Cell *p_cells[3];  // Pointer to the cell where the hidden single is found
-    int values[3];           // The value of the hidden single
-} HiddenTriple;
+int check_cell_in_hidden_triples(int triples[3], Cell* p_cell);
+int check_hidden_triples(Cell **p_cells, int hidden_triples_candidates[], int *indices);
+void find_hidden_triples(Cell **p_cells, HiddenTriples *p_hidden_triples, int *p_ht_np_nt_counter, int unit);
+int hidden_triples(SudokuBoard *p_board);
 
