@@ -11,10 +11,10 @@ int hidden_pairs(SudokuBoard *p_board)
     {
         for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            int candidate_count = 0; // in that row, how many can be j?
-            int index_1 = 0; // index of hidden single cell in the row
+            int candidate_count = 0;
+            int index_1 = 0;
             int index_2 = 0;
-            int value_1 = 0; // index of hidden single cell in the row
+            int value_1 = 0;
             int value_2 = 0;
             bool r_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
@@ -61,7 +61,7 @@ int hidden_pairs(SudokuBoard *p_board)
                     }
                 }
             }
-            if (!r_invalid) // only 1 cell can be j
+            if (!r_invalid)
             {
                 HiddenPair temp_pair;
                 temp_pair.p_cell_1 = p_board->p_rows[i][index_1];
@@ -88,10 +88,10 @@ int hidden_pairs(SudokuBoard *p_board)
     {
         for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            int candidate_count = 0; // in that row, how many can be j?
-            int index_1 = 0; // index of hidden single cell in the row
+            int candidate_count = 0;
+            int index_1 = 0;
             int index_2 = 0;
-            int value_1 = 0; // index of hidden single cell in the row
+            int value_1 = 0; 
             int value_2 = 0;
             bool c_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
@@ -111,7 +111,7 @@ int hidden_pairs(SudokuBoard *p_board)
                     value_1 = j + 1;
                 }
             }
-            if (candidate_count == 2) // only 1 cell can be j
+            if (candidate_count == 2)
             {
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
@@ -138,7 +138,7 @@ int hidden_pairs(SudokuBoard *p_board)
                     }
                 }
             }
-            if (!c_invalid) // only 1 cell can be j
+            if (!c_invalid)
             {
                 HiddenPair temp_pair;
                 temp_pair.p_cell_1 = p_board->p_cols[i][index_1];
@@ -165,10 +165,10 @@ int hidden_pairs(SudokuBoard *p_board)
     {
         for (int j = 0; j < BOARD_SIZE; j++) // iterate over every number 1-9
         {
-            int candidate_count = 0; // in that row, how many can be j?
-            int index_1 = 0; // index of hidden single cell in the row
+            int candidate_count = 0;
+            int index_1 = 0;
             int index_2 = 0;
-            int value_1 = 0; // index of hidden single cell in the row
+            int value_1 = 0;
             int value_2 = 0;
             bool b_invalid = true;
             for (int k = 0; k < BOARD_SIZE; k++) // iterate over every cell in the row
@@ -188,7 +188,7 @@ int hidden_pairs(SudokuBoard *p_board)
                     value_1 = j + 1;
                 }
             }
-            if (candidate_count == 2) // only 1 cell can be j
+            if (candidate_count == 2)
             {
                 int candi = 0;
                 for (int l = 0; l < BOARD_SIZE; l++)
@@ -238,28 +238,18 @@ int hidden_pairs(SudokuBoard *p_board)
     }
 
     //int *candidates = malloc(4);
+    int *candidates = malloc(2 * sizeof(int));
     for (int i = 0; i < hs_counter; i++)
     {
-        // Make sure to allocate enough memory for the candidates array
-        int *candidates = malloc(2 * sizeof(int));
-
         candidates[0] = pairs[i].value1;
         candidates[1] = pairs[i].value2;
         
-        // Call set_candidates on each cell in the pair with both candidates
         set_candidates(pairs[i].p_cell_1, candidates, 2);
         set_candidates(pairs[i].p_cell_2, candidates, 2);
 
-        // Free the memory allocated for candidates
-        free(candidates);
     }
     free(pairs);
+    free(candidates);
     return hs_counter; // returns total cells solved by hidden singles
 }
-
-
-
-
-
-
 
