@@ -2,13 +2,12 @@
 
 #include "sudoku.h"
 
-typedef struct HiddenSingle_impl
-{
-    Cell *p_cell;
-    int value;
+// Declare functions related to hidden singles
+int hidden_singles(SudokuBoard *p_board)
+
+typedef struct {
+    Cell *p_cell;  // Pointer to the cell where the hidden single is found
+    int value;           // The value of the hidden single
 } HiddenSingle;
 
-int find_hidden_single_values(Cell **p_cells, int *hidden_single_values);
-void find_hidden_single(Cell **p_cells, HiddenSingle *p_hidden_singles,
-                        int *p_counter);
-int hidden_singles(SudokuBoard *p_board, Cell ***p_solved_cells);
+
