@@ -2,12 +2,16 @@
 
 #include "sudoku.h"
 
-// Declare functions related to hidden singles
-int hidden_pairs(SudokuBoard *p_board);
+typedef struct HiddenPairs_impl
+{
+    Cell **p_cells;
+    int index;
+    int values[2];
+} HiddenPairs;
 
-typedef struct {
-    Cell *p_cell_1;  // Pointer to the cell where the hidden single is found
-    Cell *p_cell_2; 
-    int value1;           // The value of the hidden single
-    int value2;
-} HiddenPair;
+int check_hidden_pairs(Cell **p_cells, int value);
+void find_hidden_pairs_index(Cell** p_cells, int count, int* possible_hidden_values, 
+                        int index, HiddenPairs *p_hidden_pairs, int* p_ht_np_nt_counter);
+void find_hidden_pairs(Cell **p_cells, HiddenPairs *p_hidden_pairs,
+                        int *p_ht_np_nt_counter);
+int hidden_pairs(SudokuBoard *p_board);
